@@ -12,7 +12,7 @@ int main()
 //    char language;
 //    cout << "Enter the language(en or ru): ";
 //    cin >> language;
-    myFile_Handler.open("C:\\git\\feeralbee_test\\input_txt_output_to_console\\cppstudio.txt");
+    myFile_Handler.open("C:\\git\\feeralbee_test\\input_txt_output_to_console\\Pushkin.txt");
 
     if (myFile_Handler.is_open())
     {
@@ -61,7 +61,7 @@ int main()
 	setlocale(LC_CTYPE, "rus");
 	char a;
 	ifstream F;
-	F.open("C:\\git\\feeralbee_test\\input_txt_output_to_console\\cppstudio.txt");
+	F.open("C:\\git\\feeralbee_test\\input_txt_output_to_console\\Pushkin.txt");
 	if (F)
 	{
 		while (!F.eof())
