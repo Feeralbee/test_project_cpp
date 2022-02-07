@@ -9,69 +9,39 @@ int main()
     system("chcp 1251>nul");
     ifstream myFile_Handler;
     string myLine;
-//    char language;
-//    cout << "Enter the language(en or ru): ";
-//    cin >> language;
+    char language;
+    cout << "Enter the language(english(enter e) or russian(enter r) : ";
+    cin >> language;
     myFile_Handler.open("C:\\git\\feeralbee_test\\input_txt_output_to_console\\Pushkin.txt");
 
     if (myFile_Handler.is_open())
     {
-        /*switch (language)
+        switch (language)
         {
-        case'ru':
+        case 'r':
             cout << "Файл открылся!" << endl;
-        case 'en':
+            cout << endl;
+            break;
+        case 'e':
             cout << "File has opened!" << endl;
-        }*/
+            cout << endl;
+            break;
+        }
         while (getline(myFile_Handler, myLine))
         {
-
             cout << myLine << endl;
         }
         myFile_Handler.close();
     }
     else
     {
-       /* switch (language)
+        switch (language)
         {
-        case'ru':
+        case'r':
             cout << "Файл не открылся!" << endl;
-        case 'en':*/
+        case 'e':
             cout << "File has not opened!" << endl;
-        
+        }
     }
     return 0;
 }
-
-
-
-
-
-
-
-
-/*#include <iostream>
-#include <fstream>
-#include <string>
-#include <clocale>
-using namespace std;
-
-int main()
-{
-	setlocale(LC_CTYPE, "rus");
-	char a;
-	ifstream F;
-	F.open("C:\\git\\feeralbee_test\\input_txt_output_to_console\\Pushkin.txt");
-	if (F)
-	{
-		while (!F.eof())
-		{
-			F >> a;
-			cout << a;
-		}
-		F.close();
-	}
-	else cout << "File hadn't found" << endl;
-	return 0;
-}
-*/
