@@ -1,43 +1,6 @@
-# Extensions to ignore
-*.user
-*.suo
-*.cache
-*.sdf
-*.opensdf
-*.bak
-*.ilk
-*.exp
-*.aps
-*.ipch
-*.pdb
-*.VC.db
-*.VC.opendb
-*.orig
-*.iml
-*~
-*#
-*.DS_Store
-.Trashes
-*.swp
-*.lock
-*~.nib
-*.xccheckout
-*.cxx
-*.user.targets
-
-# File names to ignore
-debug.log
-desktop.ini
-compile_commands.json
-
 # Generic folders to ignore
-temp/
-__pycache__
 bin
 obj
 
 # Specific folders to ignore
-/.idea
-/.project
-/.vscode
 /.vs
