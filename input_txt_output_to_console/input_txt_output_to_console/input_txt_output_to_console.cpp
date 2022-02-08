@@ -12,7 +12,7 @@ int main()
     char language;
     cout << "Enter the language(english(enter e) or russian(enter r) : ";
     cin >> language;
-    myFile_Handler.open("C:\\git\\feeralbee_test\\input_txt_output_to_console\\Pushkin.txt");
+    myFile_Handler.open("Pushkin.txt");
 
     if (myFile_Handler.is_open())
     {
@@ -39,8 +39,10 @@ int main()
         {
         case'r':
             cout << "Файл не открылся!" << endl;
+            break;
         case 'e':
             cout << "File has not opened!" << endl;
+            break;
         }
     }
     return 0;

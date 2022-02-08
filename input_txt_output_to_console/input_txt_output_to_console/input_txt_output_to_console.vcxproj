@@ -72,15 +72,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(MSBuildProjectExtensionsPath)$(Configuration)\</IntDir>
+    <OutDir>C:\git\feeralbee_test\input_txt_output_to_console\input_txt_output_to_console\bin</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(MSBuildProjectExtensionsPath)$(Configuration)\</IntDir>
+    <OutDir>C:\git\feeralbee_test\input_txt_output_to_console\input_txt_output_to_console\bin</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(MSBuildProjectExtensionsPath)$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>C:\git\feeralbee_test\input_txt_output_to_console\input_txt_output_to_console\bin</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(MSBuildProjectExtensionsPath)$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>C:\git\feeralbee_test\input_txt_output_to_console\input_txt_output_to_console\bin</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
