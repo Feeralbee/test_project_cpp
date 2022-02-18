@@ -1,49 +1,59 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include "language.h"
+#include "errors.h"
+#include "system_notifications.h"
 
-using namespace std;
+
+void open_file_and_output_text(std::string language_index)
+{
+    std::ifstream File_handler;
+    std::string text;
+    std::string file;
+    std::cin >> file;
+    File_handler.open(file.c_str());
+        if (File_handler.is_open())
+    {
+        while (getline(File_handler, text))
+        {
+            std::cout << text << std::endl;
+        }
+        File_handler.close();
+    }
+    else
+    {
+            if (language_index == "ru")
+            {
+                error_finding_the_file_at_the_specified_path_ru();
+
+            }
+
+            if (language_index == "en")
+            {
+                error_finding_the_file_at_the_specified_path_en();
+
+            }
+
+    }
+
+}
+
 
 int main()
 {
     system("chcp 1251>nul");
-    ifstream myFile_Handler;
-    string myLine;
-    char language;
-    cout << "Enter the language(english(enter e) or russian(enter r) : ";
-    cin >> language;
-    myFile_Handler.open("Pushkin.txt");
 
-    if (myFile_Handler.is_open())
+    output_of_welcome_phrase();
+
+    bool language = choice_of_interface_language();
+    if ( language == true)
     {
-        switch (language)
-        {
-        case 'r':
-            cout << "Файл открылся!" << endl;
-            cout << endl;
-            break;
-        case 'e':
-            cout << "File has opened!" << endl;
-            cout << endl;
-            break;
-        }
-        while (getline(myFile_Handler, myLine))
-        {
-            cout << myLine << endl;
-        }
-        myFile_Handler.close();
+        open_file_and_output_text("ru");
     }
-    else
+    else if (language == false)
     {
-        switch (language)
-        {
-        case'r':
-            cout << "Файл не открылся!" << endl;
-            break;
-        case 'e':
-            cout << "File has not opened!" << endl;
-            break;
-        }
+        open_file_and_output_text("en");
     }
     return 0;
 }

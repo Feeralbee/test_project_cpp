@@ -4,3 +4,4 @@ obj
 
 # Specific folders to ignore
 **/.vs
+input_txt_output_to_console/packages

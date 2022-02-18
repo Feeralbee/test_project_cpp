@@ -23,7 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{85355a5d-01d1-46ce-bc82-6164cbfecaa2}</ProjectGuid>
     <RootNamespace>inputtxtoutputtoconsole</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -72,23 +72,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IntDir>$(MSBuildProjectExtensionsPath)$(Configuration)\</IntDir>
-    <OutDir>$(OutDir)</OutDir>
+    <IntDir>$(SolutionDir)$(ProjectName)\obj\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(ProjectName)\bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IntDir>$(MSBuildProjectExtensionsPath)$(Configuration)\</IntDir>
-    <OutDir>$(OutDir)</OutDir>
+    <IntDir>$(SolutionDir)$(ProjectName)\obj\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(ProjectName)\bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IntDir>$(MSBuildProjectExtensionsPath)$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(OutDir)</OutDir>
+    <IntDir>$(SolutionDir)$(ProjectName)\obj\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(ProjectName)\bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IntDir>$(MSBuildProjectExtensionsPath)$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(OutDir)</OutDir>
+    <IntDir>$(SolutionDir)$(ProjectName)\obj\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(ProjectName)\bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -148,8 +148,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="input_txt_output_to_console.cpp" />
+    <ClCompile Include="language.cpp" />
+    <ClCompile Include="errors.cpp" />
+    <ClCompile Include="system_notifications.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="errors.h" />
+    <ClInclude Include="system_notifications.h" />
+    <ClInclude Include="language.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>
