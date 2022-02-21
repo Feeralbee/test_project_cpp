@@ -1,5 +1,9 @@
 #pragma once
-#include <string>
 
+enum class language
+{
+	russian,
+	english
+};
 
-bool choice_of_interface_language();
+language choice_of_interface_language();
