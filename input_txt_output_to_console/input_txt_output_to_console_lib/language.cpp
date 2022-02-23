@@ -1,6 +1,6 @@
 #include "language.h"
-#include "errors.h"
-#include "system_notifications.h"
+#include "application_errors.h"
+#include "application_notifications.h"
 
 #include <iostream>
 #include <string>
