@@ -1,30 +1,29 @@
 #include "language.h"
-#include "application_errors.h"
-#include "application_notifications.h"
 
 #include <iostream>
 #include <string>
 
-
-language choice_of_interface_language()
+std::string input_user_language()
 {
-    std::string system_language;
-    for (;;)
+    std::string user_selection;
+    std::cin >> user_selection;
+    return user_selection;
+}
+
+language interface_language_selection(std::string user_selection)
+{
+    language language;
+    if (user_selection == "yes")
     {
-        std::cin >> system_language;
-        if (system_language == "Русский" or system_language == "русский")
-        {
-            notification_about_choice_of_language(language::russian);
-            return language::russian;
-        }
-        else if (system_language == "English" or system_language == "english")
-        {
-            notification_about_choice_of_language(language::english);
-            return language::english;
-        }
-        else
-        {
-            language_input_error();
-        }
+        language = language::russian;
     }
+    else if (user_selection == "no")
+    {
+        language = language::english;
+    }
+    else
+    {
+        language = language::unknown;
+    }
+    return language;
 }

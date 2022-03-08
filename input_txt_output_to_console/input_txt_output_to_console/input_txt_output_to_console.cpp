@@ -1,19 +1,47 @@
 ﻿#include "language.h"
-#include "application_notifications.h"
 #include "open_and_output_text.h"
+#include "program_notifications.h"
 
+#include <iostream>
 #include <string>
-
-
+#include <fstream>
 
 int main()
 {
     system("chcp 1251>nul");
 
-    output_of_welcome_phrase();
+    output_notifications(language::unknown, notifications_and_errors::welcome_phrase);
 
-    language language = choice_of_interface_language();
+    auto user_selection = input_user_language();
 
-    open_file_and_output_text(language);
+    language program_language = interface_language_selection(user_selection);
+
+    system("cls");
+
+    output_notifications(program_language, notifications_and_errors::enter_file_path);
+
+    if (program_language == language::unknown) { program_language = language::english; }
+
+    std::string file_name = input_file_name();
+
+    std::ifstream* file_handler;
+    bool result_of_opening_file;
+    std::tie(file_handler, result_of_opening_file) = open_file(file_name);
+
+    switch (result_of_opening_file) 
+    {
+    case false:
+        system("cls");
+        output_notifications_with_endl(program_language, notifications_and_errors::path_incorrectly);
+        break;
+    case true:
+        system("cls");
+        output_notifications_with_endl(program_language, notifications_and_errors::file_has_openned);
+
+        std::vector<std::string> strings_from_file = read_file(file_name, file_handler);
+
+        output_text_from_file(strings_from_file);
+        break;
+    }
     return 0;
 }
