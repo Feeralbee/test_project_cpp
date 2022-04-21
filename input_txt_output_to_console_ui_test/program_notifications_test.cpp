@@ -1,12 +1,12 @@
-#include "gtest/gtest.h"
+п»ї#include "gtest/gtest.h"
 
 #include "program_notifications.h"
 
 TEST(output_program_notifications, notifications_in_russian)
 {
-	ASSERT_EQ(notifications(language::russian, notifications_and_errors::enter_file_path), "Вы выбрали русский язык. Введите путь к файлу: ");
-	ASSERT_EQ(notifications(language::russian, notifications_and_errors::file_has_openned), "Файл открылся!");
-	ASSERT_EQ(notifications(language::russian, notifications_and_errors::path_incorrectly), "Ошибка! Путь к файлу введен неправильно!");
+	ASSERT_EQ(notifications(language::russian, notifications_and_errors::enter_file_path), "Р’С‹ РІС‹Р±СЂР°Р»Рё СЂСѓСЃСЃРєРёР№ СЏР·С‹Рє. Р’РІРµРґРёС‚Рµ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ: ");
+	ASSERT_EQ(notifications(language::russian, notifications_and_errors::file_has_openned), "Р¤Р°Р№Р» РѕС‚РєСЂС‹Р»СЃСЏ!");
+	ASSERT_EQ(notifications(language::russian, notifications_and_errors::path_incorrectly), "РћС€РёР±РєР°! РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ РІРІРµРґРµРЅ РЅРµРїСЂР°РІРёР»СЊРЅРѕ!");
 }
 
 TEST(output_program_notifications, notifications_in_english)
@@ -18,6 +18,6 @@ TEST(output_program_notifications, notifications_in_english)
 
 TEST(output_program_notifications, notifications_in_uknown)
 {
-	ASSERT_EQ(notifications(language::unknown, notifications_and_errors::welcome_phrase), "Hi! If you want to change russian language, write yes, else no: ");
+	ASSERT_EQ(notifications(language::unknown, notifications_and_errors::welcome_phrase), "Hi! Do you want select Russian language? [Y/n]: ");
 	ASSERT_EQ(notifications(language::unknown, notifications_and_errors::enter_file_path), "Error! You entered an incorrect value! Language - english. Enter file path: ");
 }

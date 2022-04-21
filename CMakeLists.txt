@@ -19,3 +19,6 @@ add_subdirectory(input_txt_output_to_console_lib_test)
 add_subdirectory(input_txt_output_to_console_ui)
 add_subdirectory(input_txt_output_to_console_ui_test)
 
+file(COPY output_test_txt_files
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+

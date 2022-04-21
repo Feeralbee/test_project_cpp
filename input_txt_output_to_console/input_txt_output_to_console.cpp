@@ -2,21 +2,18 @@
 #include "open_and_output_text.h"
 #include "program_notifications.h"
 
-#include <iostream>
 #include <string>
 #include <fstream>
 
+
 int main()
 {
-    system("chcp 1251>nul");
-
     output_notifications(language::unknown, notifications_and_errors::welcome_phrase);
 
     auto user_selection = input_user_language();
 
     language program_language = interface_language_selection(user_selection);
 
-    system("cls");
 
     output_notifications(program_language, notifications_and_errors::enter_file_path);
 
@@ -31,11 +28,9 @@ int main()
     switch (result_of_opening_file) 
     {
     case false:
-        system("cls");
         output_notifications_with_endl(program_language, notifications_and_errors::path_incorrectly);
         break;
     case true:
-        system("cls");
         output_notifications_with_endl(program_language, notifications_and_errors::file_has_openned);
 
         std::vector<std::string> strings_from_file = read_file(file_name, file_handler);

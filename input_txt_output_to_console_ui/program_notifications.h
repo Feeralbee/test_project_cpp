@@ -1,4 +1,6 @@
-#pragma once
+﻿#pragma once
+
+#include "std_out.h"
 #include "language.h"
 #include <string>
 

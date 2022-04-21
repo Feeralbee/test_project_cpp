@@ -1,4 +1,4 @@
-#include "language.h"
+ï»¿#include "language.h"
 #include "program_notifications.h"
 
 #include <string>
@@ -6,11 +6,13 @@
 
 void output_notifications_with_endl(language language, notifications_and_errors index_of_notification)
 {
+	platform::init_out();
 	std::cout << notifications(language, index_of_notification) << std::endl;
 }
 
 void output_notifications(language language, notifications_and_errors index_of_notification)
 {
+	platform::init_out();
 	std::cout << notifications(language, index_of_notification);
 }
 
@@ -24,13 +26,13 @@ std::string notifications(language language, notifications_and_errors index_of_n
 		switch (index_of_notification)
 		{
 		case notifications_and_errors::enter_file_path:
-			message = "Enter file path: ";
+			message = u8"Enter file path: ";
 			break;
 		case notifications_and_errors::file_has_openned:
-			message = "File has openned!";
+			message = u8"File has openned!";
 			break;
 		case notifications_and_errors::path_incorrectly:
-			message = "Error! The path to the file is entered incorrectly!";
+			message = u8"Error! The path to the file is entered incorrectly!";
 			break;
 		}
 		break;
@@ -38,13 +40,13 @@ std::string notifications(language language, notifications_and_errors index_of_n
 		switch (index_of_notification)
 		{
 		case notifications_and_errors::enter_file_path:
-			message = "Âû âûáðàëè ðóññêèé ÿçûê. Ââåäèòå ïóòü ê ôàéëó: ";
+			message = u8"Ð’Ñ‹ Ð²Ñ‹Ð±Ñ€Ð°Ð»Ð¸ Ñ€ÑƒÑÑÐºÐ¸Ð¹ ÑÐ·Ñ‹Ðº. Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¿ÑƒÑ‚ÑŒ Ðº Ñ„Ð°Ð¹Ð»Ñƒ: ";
 			break;
 		case notifications_and_errors::file_has_openned:
-			message = "Ôàéë îòêðûëñÿ!";
+			message = u8"Ð¤Ð°Ð¹Ð» Ð¾Ñ‚ÐºÑ€Ñ‹Ð»ÑÑ!";
 			break;
 		case notifications_and_errors::path_incorrectly:
-			message = "Îøèáêà! Ïóòü ê ôàéëó ââåäåí íåïðàâèëüíî!";
+			message = u8"ÐžÑˆÐ¸Ð±ÐºÐ°! ÐŸÑƒÑ‚ÑŒ Ðº Ñ„Ð°Ð¹Ð»Ñƒ Ð²Ð²ÐµÐ´ÐµÐ½ Ð½ÐµÐ¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ð¾!";
 			break;
 		}
 		break;
@@ -52,10 +54,10 @@ std::string notifications(language language, notifications_and_errors index_of_n
 		switch (index_of_notification)
 		{
 		case notifications_and_errors::welcome_phrase:
-			message = "Hi! If you want to change russian language, write yes, else no: ";
+			message = u8"Hi! Do you want select Russian language? [Y/n]: ";
 			break;
 		case notifications_and_errors::enter_file_path:
-			message = "Error! You entered an incorrect value! Language - english. Enter file path: ";
+			message = u8"Error! You entered an incorrect value! Language - english. Enter file path: ";
 			break;
 		}
 		break;
