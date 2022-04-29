@@ -1,8 +1,13 @@
 #include "std_out.h"
 
 #include <cstdlib>
-
-void platform::init_out()
+namespace ui
+{
+namespace platform
+{
+void init_out()
 {
     std::system("clear");
+}
+}
 }
