@@ -5,11 +5,14 @@
 
 #include "readers/txt.h"
 
-int main()
+int main(int argc, char *argv[])
 {
-    ui::notifications::output_welcome_phrase();
+    ui::language::id program_language = ui::language::id::english;
 
-    ui::language::id program_language = ui::language::interface_language_selection(ui::input::user_choice());
+    if (argc > 1 && std::string(argv[1]) == "-ru")
+    {
+        program_language = ui::language::id::russian;
+    }
 
     ui::notifications::output(program_language, ui::notifications::id::enter_file_path);
 

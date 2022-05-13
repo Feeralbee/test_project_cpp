@@ -8,7 +8,6 @@ endif()
 add_library(ui  STATIC
     src/notifications.cpp 
     src/${PLATFORM_DIRECTORY}/std_out.cpp
-    src/language.cpp
     src/input.cpp
     src/text.cpp
 
@@ -26,7 +25,6 @@ target_include_directories(ui
 )
 ######################Tests###########################
 add_executable(ui_test 
-    tests/language_test.cpp
     tests/program_notifications_test.cpp
 )
 

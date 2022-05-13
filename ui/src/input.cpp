@@ -10,12 +10,5 @@ std::string file_path()
     std::cin >> FilePath;
     return FilePath;
 }
-
-std::string user_choice()
-{
-    std::string choice;
-    std::cin >> choice;
-    return choice;
-}
 }
 }

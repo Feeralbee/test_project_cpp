@@ -8,7 +8,5 @@ namespace ui
 namespace input
 {
 std::string file_path();
-std::string user_choice();
 }
-
 }

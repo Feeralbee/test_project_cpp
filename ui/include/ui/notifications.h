@@ -15,8 +15,6 @@ enum class id
     file_has_openned,
     path_incorrectly,
 };
-
-void output_welcome_phrase();
 std::string strings(ui::language::id language, ui::notifications::id index_of_notification);
 void output(ui::language::id language, ui::notifications::id index_of_notification);
 }

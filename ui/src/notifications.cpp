@@ -4,13 +4,6 @@ namespace ui
 {
 namespace notifications
 {
-void output_welcome_phrase()
-{
-    platform::init_out();
-    std::string welcome_phrase = u8"Hi! Do you want select Russian language? [Y/n]: ";
-    std::cout << welcome_phrase;
-}
-
 void output(ui::language::id language, id index_of_notification)
 {
     platform::init_out();
