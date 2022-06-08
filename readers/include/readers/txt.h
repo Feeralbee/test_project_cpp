@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <filesystem>
 #include <fstream>
 #include <optional>
 #include <string>
@@ -9,12 +10,13 @@ namespace readers
 class txt
 {
   public:
-    txt(std::string file_name);
-    std::vector<std::optional<std::string>> get_strings();
+    txt()
+    {
+    }
+    std::optional<std::vector<std::wstring>> get_strings_from_file(std::filesystem::path file_path);
 
-  private:
-    std::ifstream FileHandler;
-    std::vector<std::optional<std::string>> strings_of_text;
+  protected:
+    std::vector<std::wstring> read(std::wistream &file_handler);
 };
 
-} // namespace readers
+}

@@ -7,15 +7,21 @@
 
 namespace ui
 {
-namespace notifications
-{
-enum class id
+enum class notifications_id
 {
     enter_file_path,
     file_has_openned,
-    path_incorrectly,
+    file_wasnt_found,
 };
-std::string strings(ui::language::id language, ui::notifications::id index_of_notification);
-void output(ui::language::id language, ui::notifications::id index_of_notification);
-}
+
+class notifications
+{
+  protected:
+    std::string strings(notifications_id index_of_notification);
+    ui::language::id program_language;
+
+  public:
+    notifications(ui::language::id language);
+    void output(notifications_id index_of_notification);
+};
 }

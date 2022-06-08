@@ -21,3 +21,14 @@ target_link_libraries(readers_test
         readers
         CONAN_PKG::gtest
 )
+
+add_dependencies(readers_test copy_test_resources)
+
+set_target_properties(
+    readers_test PROPERTIES
+    VS_DEBUGGER_WORKING_DIRECTORY "${FEBE_EXE_OUTPUT_DIRECTORY}")
+
+add_test(NAME readers_test
+	COMMAND readers_test
+	WORKING_DIRECTORY ${FEBE_EXE_OUTPUT_DIRECTORY}
+)

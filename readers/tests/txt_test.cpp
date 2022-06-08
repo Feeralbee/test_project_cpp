@@ -1,23 +1,80 @@
 ﻿#include "readers/txt.h"
 #include "gtest/gtest.h"
 
-TEST(get_strings_from_file, 4_strings)
+namespace readers
 {
-    readers::txt testFile("./txt_files_to_output_test/test_en.txt");
-    std::optional<std::string> string1 = u8"Should this life sometime deceive you,";
-    std::optional<std::string> string2 = u8"Don’t be sad or mad at it!";
-    std::optional<std::string> string3 = u8"On a gloomy day, submit:";
-    std::optional<std::string> string4 = u8"Trust — fair day will come, why grieve you?";
-
-    std::vector<std::optional<std::string>> strings_from_text = {string1, string2, string3, string4};
-    ASSERT_EQ(testFile.get_strings(), strings_from_text);
+class txt_test : public txt
+{
+  public:
+    txt_test()
+    {
+    }
+    std::vector<std::wstring> get_read(std::wistream &file_handler)
+    {
+        return read(file_handler);
+    }
+};
 }
 
-TEST(get_strings_from_file_russian, 4strings)
+// read_strings
+TEST(read_strings, 1_string)
 {
-    readers::txt testFile("./txt_files_to_output_test/test_ru.txt");
-    std::vector<std::optional<std::string>> strings_from_text = {
-        u8"Если жизнь тебя обманет,", u8"Не печалься, не сердись!", u8"В день уныния смирись:",
-        u8"День веселья, верь, настанет."};
-    ASSERT_EQ(testFile.get_strings(), strings_from_text);
+    readers::txt_test test;
+    std::wstringstream file;
+    file << "1111";
+    std::vector<std::wstring> vector_file = {L"1111"};
+    ASSERT_EQ(vector_file, test.get_read(file));
+}
+
+TEST(read_strings, 2_strings)
+{
+    readers::txt_test test;
+    std::wstringstream file;
+    file << "1111" << std::endl << "2222";
+    std::vector<std::wstring> vector_file = {L"1111", L"2222"};
+    ASSERT_EQ(vector_file, test.get_read(file));
+}
+
+TEST(read_strings, 5_strings_with_empty_string_at_top)
+{
+    readers::txt_test test;
+    std::wstringstream file;
+    file << std::endl << "2222" << std::endl << "3333" << std::endl << "4444" << std::endl;
+    std::vector<std::wstring> vector_file = {L"", L"2222", L"3333", L"4444"};
+    ASSERT_EQ(vector_file, test.get_read(file));
+}
+
+TEST(read_strings, 5_strings_with_empty_string_at_middle)
+{
+    readers::txt_test test;
+    std::wstringstream file;
+    file << "1111" << std::endl << "2222" << std::endl << std::endl << "3333" << std::endl << "4444" << std::endl;
+    std::vector<std::wstring> vector_file = {L"1111", L"2222", L"", L"3333", L"4444"};
+    ASSERT_EQ(vector_file, test.get_read(file));
+}
+
+TEST(read_strings, 5_strings_with_empty_string_at_end)
+{
+    readers::txt_test test;
+    std::wstringstream file;
+    file << "2222" << std::endl << "3333" << std::endl << "4444" << std::endl << std::endl;
+    std::vector<std::wstring> vector_file = {L"2222", L"3333", L"4444", L""};
+    ASSERT_EQ(vector_file, test.get_read(file));
+}
+
+// get strings from file
+TEST(get_strings_from_file, input_invalid_file_path)
+{
+    readers::txt_test test;
+    std::filesystem::path invalid_file_path = "invalid_file_path.txt";
+    ASSERT_EQ(std::nullopt, test.get_strings_from_file(invalid_file_path));
+}
+
+TEST(get_strings_from_file, input_correct_file_path)
+{
+    readers::txt_test test;
+    std::filesystem::path correct_file_path = "test_files/text.txt";
+    std::wstringstream file;
+    file << u8"line 1" << std::endl << u8"line 2" << std::endl << u8"line 3";
+    ASSERT_EQ(test.get_read(file), test.get_strings_from_file(correct_file_path).value());
 }

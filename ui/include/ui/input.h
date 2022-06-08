@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -7,6 +8,6 @@ namespace ui
 {
 namespace input
 {
-std::string file_path();
+std::filesystem::path file_path();
 }
 }

@@ -4,11 +4,11 @@ namespace ui
 {
 namespace input
 {
-std::string file_path()
+std::filesystem::path file_path()
 {
-    std::string FilePath;
-    std::cin >> FilePath;
-    return FilePath;
+    std::filesystem::path file_path;
+    std::cin >> file_path;
+    return file_path;
 }
 }
 }

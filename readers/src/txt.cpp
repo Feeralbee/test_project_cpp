@@ -1,27 +1,33 @@
 ﻿#include "readers/txt.h"
+#include <codecvt>
 
 namespace readers
 {
-txt::txt(std::string file_name_to_read)
+std::optional<std::vector<std::wstring>> txt::get_strings_from_file(std::filesystem::path file_path)
 {
-    FileHandler.open(file_name_to_read);
-    if (FileHandler.is_open())
+    std::optional<std::vector<std::wstring>> result;
+    std::wifstream file_handler;
+    file_handler.open(file_path);
+    if (file_handler.is_open())
     {
-        std::string text;
-        while (getline(FileHandler, text))
-        {
-            strings_of_text.push_back(text);
-        }
+        result = read(file_handler);
+        file_handler.close();
     }
     else
     {
-        strings_of_text.push_back(std::nullopt);
+        result = std::nullopt;
     }
-    FileHandler.close();
+    return result;
 }
 
-std::vector<std::optional<std::string>> txt::get_strings()
+std::vector<std::wstring> txt::read(std::wistream &file_handler)
 {
+    std::wstring text;
+    std::vector<std::wstring> strings_of_text;
+    while (getline(file_handler, text))
+    {
+        strings_of_text.push_back(text);
+    }
     return strings_of_text;
 }
 

@@ -1,13 +1,6 @@
-     
-if(WIN32)
-    SET(PLATFORM_DIRECTORY "windows")
-else()
-    SET(PLATFORM_DIRECTORY "linux")
-endif()
-
 add_library(ui  STATIC
     src/notifications.cpp 
-    src/${PLATFORM_DIRECTORY}/std_out.cpp
+    src/$<IF:$<BOOL:${WIN32}>,windows,linux>/std_out.cpp
     src/input.cpp
     src/text.cpp
 
@@ -25,10 +18,15 @@ target_include_directories(ui
 )
 ######################Tests###########################
 add_executable(ui_test 
-    tests/program_notifications_test.cpp
+    tests/text_test.cpp
+    tests/notifications_test.cpp
 )
 
 target_link_libraries(ui_test   
     ui
     CONAN_PKG::gtest
+)
+
+add_test(NAME ui_test
+	COMMAND ui_test
 )
