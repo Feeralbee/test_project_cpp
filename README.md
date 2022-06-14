@@ -1,6 +1,6 @@
 # feeralbee_test
 
-This project read txt files and output their to console. It has console UI and multilanguage - russian and english.  
+This project read txt and json files and output their to console. It has console UI and multilanguage - russian and english.  
 Project working on Ubuntu and Windows(on diffirent OS program didn't test).
 
 1. Preparation of necessary funds
@@ -8,9 +8,13 @@ Project working on Ubuntu and Windows(on diffirent OS program didn't test).
     + Installing Python3
     + Installing Conan
     + Installing Docker
+    + Installing Clang
 2. Build project
 3. Run docker on Windows
 4. Run docker on Linux
+5. Run tests
+    + In Windows
+    + In Docker
 
 ## 1. Preparation of necessary funds
 
@@ -56,6 +60,16 @@ You will see Consumer commands of conan, so the installation was successful
 
 [Folow to this link](https://docs.docker.com/engine/install/ubuntu/ "Install Docker on Ubuntu")  
 
+### Installing Clang
+
+[Folow to this link](http://releases.llvm.org/ "Install LLVM")
+
+Open git bash in project folder and enter
+
+`pip install pre-commit`
+
+`pre-commit install`
+
 ## 2. Build project
 
 !["cmake_project"](readme_pictures/build_cmake.png)  
@@ -80,3 +94,19 @@ Enter `winpty bash ./build-unix.sh`
 Open terminal in `feeralbee_test/docker/linux`  
 Enter `./build-unix.sh`
 If it not working enter `chmod +x build-unix.sh` and try again
+
+## 5. Run tests
+
+Before running the tests, you must build the project
+
+`cmake --build .` in cmake folder
+
+### In Windows
+
+Open command promt in cmake folder with project and enter
+
+`ctest -C<build type>`
+
+### In Docker
+
+`ctest`
