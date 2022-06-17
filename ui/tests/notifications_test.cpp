@@ -1,4 +1,4 @@
-﻿#include "gtest/gtest.h"
+#include "gtest/gtest.h"
 
 #include "ui/language.h"
 #include "ui/notifications.h"
@@ -40,17 +40,17 @@ TEST(output_notifications_in_english, file_wasnt_found)
 ui::notifications_test notifications_in_russian(ui::language::id::russian);
 TEST(output_notifications_in_russian, enter_file_path)
 {
-    ASSERT_EQ(u8"Введите путь к файлу: ",
+    ASSERT_EQ("Введите путь к файлу: ",
               notifications_in_russian.get_notification(ui::notifications_id::enter_file_path));
 }
 
 TEST(output_notifications_in_russian, file_has_openned)
 {
-    ASSERT_EQ(u8"Файл открылся!\n", notifications_in_russian.get_notification(ui::notifications_id::file_has_openned));
+    ASSERT_EQ("Файл открылся!\n", notifications_in_russian.get_notification(ui::notifications_id::file_has_openned));
 }
 
 TEST(output_notifications_in_russian, file_wasnt_found)
 {
-    ASSERT_EQ(u8"Ошибка! По данному пути файл не найден!",
+    ASSERT_EQ("Ошибка! По данному пути файл не найден!",
               notifications_in_russian.get_notification(ui::notifications_id::file_wasnt_found));
 }

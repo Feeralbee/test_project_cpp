@@ -9,5 +9,8 @@ void init_out()
 {
     std::system("clear");
 }
+void init_input()
+{
+}
 }
 }

@@ -1,4 +1,8 @@
-﻿#include "ui/notifications.h"
+#include "ui/notifications.h"
+#include "ui/language.h"
+
+#include <iostream>
+#include <string>
 
 namespace ui
 {
@@ -35,15 +39,15 @@ std::string ui::notifications::strings(notifications_id index_of_notification)
     {
         if (index_of_notification == notifications_id::enter_file_path)
         {
-            message = u8"Введите путь к файлу: ";
+            message = "Введите путь к файлу: ";
         }
         else if (index_of_notification == notifications_id::file_has_openned)
         {
-            message = u8"Файл открылся!\n";
+            message = "Файл открылся!\n";
         }
         else if (index_of_notification == notifications_id::file_wasnt_found)
         {
-            message = u8"Ошибка! По данному пути файл не найден!";
+            message = "Ошибка! По данному пути файл не найден!";
         }
     }
     return message;

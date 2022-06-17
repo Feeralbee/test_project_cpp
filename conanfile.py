@@ -10,5 +10,5 @@ class NitroPro(ConanFile):
 
     def requirements(self):
         self.requires("gtest/1.11.0#0f1a3d5066001a8dde6535bf5b487fdd")
-
+        self.requires("jsoncpp/1.9.5")
 

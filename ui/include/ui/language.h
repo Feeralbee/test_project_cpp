@@ -1,5 +1,5 @@
-﻿#pragma once
-#include <string>
+#pragma once
+
 namespace ui
 {
 namespace language

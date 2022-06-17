@@ -1,8 +1,17 @@
-﻿#include "readers/txt.h"
+#include "readers/data.h"
+#include "readers/factory.h"
+#include "readers/json.h"
+#include "readers/txt.h"
 #include "ui/input.h"
 #include "ui/language.h"
 #include "ui/notifications.h"
 #include "ui/text.h"
+
+#include <filesystem>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
 
 int main(int argc, char *argv[])
 {
@@ -19,12 +28,11 @@ int main(int argc, char *argv[])
 
     auto file_path = ui::input::file_path();
 
-    std::optional<std::vector<std::wstring>> strings_from_text;
-
-    if (file_path.extension() == ".txt")
+    std::optional<std::vector<std::wstring>> strings_from_text = std::nullopt;
+    std::unique_ptr<readers::data> reader(readers::factory::create(file_path));
+    if (reader != nullptr)
     {
-        readers::txt user_file;
-        strings_from_text = user_file.get_strings_from_file(file_path);
+        strings_from_text = reader->get_content_from_file(file_path);
     }
 
     if (strings_from_text != std::nullopt)

@@ -13,7 +13,6 @@ add_library(ui  STATIC
 
 target_include_directories(ui
     PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/src
         ${CMAKE_CURRENT_LIST_DIR}/include
 )
 ######################Tests###########################
@@ -30,3 +29,9 @@ target_link_libraries(ui_test
 add_test(NAME ui_test
 	COMMAND ui_test
 )
+
+
+if(MSVC_IDE)
+	set_target_properties(ui_test ui PROPERTIES
+        	FOLDER ui)
+endif()

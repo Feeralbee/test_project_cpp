@@ -1,0 +1,29 @@
+{
+    "person":{ 
+        "Vlad":{
+            "surname":"Zhukov",
+            "age": 17,
+            "driver license": true
+        },
+        "Kirill":{
+            "surname":"Lebedev",
+            "age": 16,
+            "driver license": false
+        }
+    },
+    "cars":{
+        "Lada":{
+            "models":[
+                "Granta",
+                "Vesta"
+            ]
+        },
+        "Audi":{
+            "models":[
+                "RS6",
+                "RS5",
+                "Q8"
+            ]
+        }
+    }
+}

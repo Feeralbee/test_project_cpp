@@ -1,8 +1,7 @@
-﻿#pragma once
-#include "language.h"
-#include "std_out.h"
+#pragma once
+#include "ui/language.h"
+#include "ui/std_out.h"
 
-#include <iostream>
 #include <string>
 
 namespace ui
