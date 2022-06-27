@@ -24,7 +24,7 @@ target_link_libraries(readers
 
 #####################Test#####################
 add_executable(readers_test 
-    tests/txt_test.cpp
+    tests/$<IF:$<BOOL:${WIN32}>,windows,linux>/txt_test.cpp
     tests/json_test.cpp
     tests/factory_test.cpp
 )

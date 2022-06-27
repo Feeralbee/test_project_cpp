@@ -11,6 +11,6 @@ class data
   public:
     data();
     virtual ~data() = default;
-    virtual std::optional<std::vector<std::wstring>> get_content_from_file(std::filesystem::path file_path) = 0;
+    virtual std::optional<std::vector<std::wstring>> get_content_from_file() = 0;
 };
 }

@@ -7,11 +7,6 @@ namespace ui
 class text
 {
   public:
-    void output(std::vector<std::wstring> transmitted_strings_from_text);
-    text()
-    {
-    }
-
-  protected:
+    static void output(const std::vector<std::wstring> transmitted_strings_from_text);
 };
 }

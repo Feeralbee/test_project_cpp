@@ -12,11 +12,11 @@ std::unique_ptr<data> factory::create(std::filesystem::path path)
 {
     if (path.extension() == ".txt")
     {
-        return std::make_unique<readers::txt>(readers::txt());
+        return std::make_unique<readers::txt>(readers::txt(path));
     }
     else if (path.extension() == ".json")
     {
-        return std::make_unique<readers::json>(readers::json());
+        return std::make_unique<readers::json>(readers::json(path));
     }
     else
     {

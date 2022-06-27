@@ -32,8 +32,14 @@ TEST(output_notifications_in_english, file_has_openned)
 
 TEST(output_notifications_in_english, file_wasnt_found)
 {
-    ASSERT_EQ(u8"Error! The file was not found by this path!",
+    ASSERT_EQ(u8"Error! The file was not found by this path!\n",
               notifications_in_english.get_notification(ui::notifications_id::file_wasnt_found));
+}
+
+TEST(output_notifications_in_english, file_extension_incorrect)
+{
+    ASSERT_EQ(u8"The entered file extension is not supported\n",
+              notifications_in_english.get_notification(ui::notifications_id::file_extension_incorrect));
 }
 
 // Output notifications in russian
@@ -51,6 +57,12 @@ TEST(output_notifications_in_russian, file_has_openned)
 
 TEST(output_notifications_in_russian, file_wasnt_found)
 {
-    ASSERT_EQ("Ошибка! По данному пути файл не найден!",
+    ASSERT_EQ("Ошибка! По данному пути файл не найден!\n",
               notifications_in_russian.get_notification(ui::notifications_id::file_wasnt_found));
+}
+
+TEST(output_notifications_in_russian, file_extension_incorrect)
+{
+    ASSERT_EQ("Введенное расширение файла не поддерживается!\n",
+              notifications_in_russian.get_notification(ui::notifications_id::file_extension_incorrect));
 }

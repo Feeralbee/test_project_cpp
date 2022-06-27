@@ -9,14 +9,13 @@
 
 namespace readers
 {
-txt::txt()
+txt::txt(std::filesystem::path file_path) : _path(file_path)
 {
 }
-std::optional<std::vector<std::wstring>> txt::get_content_from_file(std::filesystem::path file_path)
+std::optional<std::vector<std::wstring>> txt::get_content_from_file()
 {
     std::optional<std::vector<std::wstring>> result;
-    std::wifstream file_handler;
-    file_handler.open(file_path);
+    std::wifstream file_handler(_path);
     if (file_handler.is_open())
     {
         result = read(file_handler);
