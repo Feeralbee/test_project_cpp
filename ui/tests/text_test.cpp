@@ -1,5 +1,8 @@
 #include "ui/text.h"
 #include "gtest/gtest.h"
+
+#include <string>
+
 namespace ui
 {
 class text_test : public text
@@ -22,10 +25,22 @@ class text_test : public text
             count_lines++;
         }
     }
+    void output(std::string str)
+    {
+        count_lines++;
+    }
 };
 
 }
-TEST(output_strings, one_string)
+
+TEST(output, string)
+{
+    ui::text_test test;
+    test.output("string");
+    ASSERT_EQ(1, test.get_count_lines());
+}
+
+TEST(output_array_of_strings, one_string)
 {
     std::wstring first_string = L"first string";
     std::vector<std::wstring> one_string = {first_string};
@@ -34,7 +49,7 @@ TEST(output_strings, one_string)
     ASSERT_EQ(1, test.get_count_lines());
 }
 
-TEST(output_strings, two_strings)
+TEST(output_array_of_strings, two_strings)
 {
     std::wstring first_string = L"first string";
     std::wstring second_string = L"second string";
@@ -44,7 +59,7 @@ TEST(output_strings, two_strings)
     ASSERT_EQ(2, test.get_count_lines());
 }
 
-TEST(output_strings, three_strings)
+TEST(output_array_of_strings, three_strings)
 {
     std::wstring first_string = L"first string";
     std::wstring second_string = L"second string";
@@ -55,7 +70,7 @@ TEST(output_strings, three_strings)
     ASSERT_EQ(3, test.get_count_lines());
 }
 
-TEST(output_strings, four_strings)
+TEST(output_array_of_strings, four_strings)
 {
     std::wstring first_string = L"first string";
     std::wstring second_string = L"second string";
@@ -67,7 +82,7 @@ TEST(output_strings, four_strings)
     ASSERT_EQ(4, test.get_count_lines());
 }
 
-TEST(output_strings, five_strings)
+TEST(output_array_of_strings, five_strings)
 {
     std::wstring first_string = L"first string";
     std::wstring second_string = L"second string";

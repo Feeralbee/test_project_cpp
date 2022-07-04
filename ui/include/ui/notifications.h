@@ -1,7 +1,4 @@
 #pragma once
-#include "ui/language.h"
-#include "ui/std_out.h"
-
 #include <string>
 
 namespace ui
@@ -13,15 +10,11 @@ enum class notifications_id
     file_wasnt_found,
     file_extension_incorrect,
 };
-
 class notifications
 {
-  protected:
-    std::string strings(notifications_id index_of_notification);
-    ui::language::id program_language;
-
   public:
-    notifications(ui::language::id language);
-    void output(notifications_id index_of_notification);
+    notifications();
+    virtual ~notifications() = default;
+    virtual std::string get_string(notifications_id notifi_id) = 0;
 };
 }
