@@ -7,12 +7,12 @@
 
 namespace ui
 {
-void text::output(std::string str)
+void text::output(const std::string &str)
 {
     platform::init_out();
     std::cout << str;
 }
-void text::output(const std::vector<std::wstring> transmitted_strings_from_text)
+void text::output(const std::vector<std::wstring> &transmitted_strings_from_text)
 {
     for (std::wstring text : transmitted_strings_from_text)
     {

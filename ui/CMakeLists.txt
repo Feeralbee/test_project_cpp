@@ -6,6 +6,7 @@ add_library(ui  STATIC
     src/$<IF:$<BOOL:${WIN32}>,windows,linux>/std_out.cpp
     src/input.cpp
     src/text.cpp
+    src/language.cpp
 
     include/ui/notifications.h
     include/ui/notifications_en.h 
@@ -14,6 +15,7 @@ add_library(ui  STATIC
     include/ui/std_out.h
     include/ui/input.h
     include/ui/text.h
+    include/ui/language.h
 )    
 
 target_include_directories(ui

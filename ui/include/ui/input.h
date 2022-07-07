@@ -4,6 +4,6 @@ namespace ui
 {
 namespace input
 {
-std::filesystem::path file_path();
+std::unique_ptr<std::filesystem::path> file_path();
 }
 }

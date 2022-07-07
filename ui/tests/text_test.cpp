@@ -25,19 +25,7 @@ class text_test : public text
             count_lines++;
         }
     }
-    void output(std::string str)
-    {
-        count_lines++;
-    }
 };
-
-}
-
-TEST(output, string)
-{
-    ui::text_test test;
-    test.output("string");
-    ASSERT_EQ(1, test.get_count_lines());
 }
 
 TEST(output_array_of_strings, one_string)

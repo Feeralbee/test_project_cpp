@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <string>
 
 namespace ui
@@ -12,9 +13,12 @@ enum class notifications_id
 };
 class notifications
 {
+  protected:
+    std::map<notifications_id, std::string> strings_of_notifications;
+
   public:
     notifications();
     virtual ~notifications() = default;
-    virtual std::string get_string(notifications_id notifi_id) = 0;
+    std::string get_string(notifications_id notifi_id);
 };
 }

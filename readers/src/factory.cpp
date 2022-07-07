@@ -8,7 +8,7 @@
 
 namespace readers
 {
-std::unique_ptr<data> factory::create(std::filesystem::path path)
+std::unique_ptr<data> factory::create(const std::filesystem::path &path)
 {
     if (path.extension() == ".txt")
     {

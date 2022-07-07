@@ -15,9 +15,4 @@ notifications_en::notifications_en()
     strings_of_notifications[notifications_id::file_extension_incorrect] =
         u8"The entered file extension is not supported\n";
 }
-
-std::string notifications_en::get_string(notifications_id notifi_id)
-{
-    return strings_of_notifications[notifi_id];
-}
 }

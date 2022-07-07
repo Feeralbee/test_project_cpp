@@ -3,16 +3,18 @@
 
 #include <filesystem>
 #include <iostream>
+#include <memory>
+#include <utility>
 
 namespace ui
 {
 namespace input
 {
-std::filesystem::path file_path()
+std::unique_ptr<std::filesystem::path> file_path()
 {
-    std::filesystem::path file_path;
+    std::unique_ptr<std::filesystem::path> file_path = std::make_unique<std::filesystem::path>();
     platform::init_input();
-    std::cin >> file_path;
+    std::cin >> *file_path;
     return file_path;
 }
 }

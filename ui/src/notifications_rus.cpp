@@ -15,9 +15,4 @@ notifications_rus::notifications_rus()
     strings_of_notifications[notifications_id::file_extension_incorrect] =
         "Введенное расширение файла не поддерживается!\n";
 }
-
-std::string notifications_rus::get_string(notifications_id notifi_id)
-{
-    return strings_of_notifications[notifi_id];
-}
 }

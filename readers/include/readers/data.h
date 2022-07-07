@@ -1,6 +1,6 @@
 #pragma once
 #include <filesystem>
-#include <optional>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -11,6 +11,6 @@ class data
   public:
     data();
     virtual ~data() = default;
-    virtual std::optional<std::vector<std::wstring>> get_content_from_file() = 0;
+    virtual std::unique_ptr<std::vector<std::wstring>> get_content_from_file() = 0;
 };
 }

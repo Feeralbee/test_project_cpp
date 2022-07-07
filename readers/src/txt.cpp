@@ -3,40 +3,38 @@
 #include <filesystem>
 #include <fstream>
 #include <istream>
-#include <optional>
+#include <memory>
 #include <string>
 #include <vector>
 
 namespace readers
 {
-txt::txt(std::filesystem::path file_path) : _path(file_path)
+txt::txt(const std::filesystem::path &file_path)
 {
+    _path = std::make_unique<std::filesystem::path>(file_path);
 }
-std::optional<std::vector<std::wstring>> txt::get_content_from_file()
+std::unique_ptr<std::vector<std::wstring>> txt::get_content_from_file()
 {
-    std::optional<std::vector<std::wstring>> result;
-    std::wifstream file_handler(_path);
+    std::wifstream file_handler(*_path);
     if (file_handler.is_open())
     {
-        result = read(file_handler);
+        std::unique_ptr<std::vector<std::wstring>> result = std::make_unique<std::vector<std::wstring>>();
+        read(file_handler, *result);
         file_handler.close();
+        return result;
     }
     else
     {
-        result = std::nullopt;
+        return nullptr;
     }
-    return result;
 }
 
-std::vector<std::wstring> txt::read(std::wistream &file_handler)
+void txt::read(std::wistream &file_handler, std::vector<std::wstring> &text_from_file)
 {
     std::wstring text;
-    std::vector<std::wstring> strings_of_text;
     while (std::getline(file_handler, text))
     {
-        strings_of_text.push_back(text);
+        text_from_file.push_back(text);
     }
-    return strings_of_text;
 }
-
 }

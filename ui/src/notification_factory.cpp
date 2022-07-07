@@ -1,4 +1,5 @@
 #include "ui/notification_factory.h"
+#include "ui/language.h"
 #include "ui/notifications.h"
 #include "ui/notifications_en.h"
 #include "ui/notifications_rus.h"
@@ -8,9 +9,9 @@
 
 namespace ui
 {
-std::unique_ptr<notifications> notifications_factory::make(std::string argument)
+std::unique_ptr<notifications> notifications_factory::make(language lang)
 {
-    if (argument == "russian")
+    if (lang == language::russian)
     {
         return std::make_unique<notifications_rus>(notifications_rus());
     }
