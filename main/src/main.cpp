@@ -2,8 +2,8 @@
 #include "readers/factory.h"
 #include "readers/json.h"
 #include "readers/txt.h"
+#include "ui/cmd_parsers.h"
 #include "ui/input.h"
-#include "ui/language.h"
 #include "ui/notification_factory.h"
 #include "ui/notifications.h"
 #include "ui/text.h"
@@ -16,9 +16,9 @@
 
 int main(int argc, char *argv[])
 {
-    const auto lang = parse_language_argument(argc, argv);
+    ui::cmd::parse_language(argc, argv);
 
-    auto notification = ui::notifications_factory::make(lang);
+    auto notification = ui::notifications_factory::make();
 
     ui::text::output(notification->get_string(ui::notifications_id::enter_file_path));
 
