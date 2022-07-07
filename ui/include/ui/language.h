@@ -1,9 +1,24 @@
 #pragma once
 
-enum class language
+namespace ui
+{
+enum class language_id
 {
     russian,
     english
 };
+class language
+{
+  private:
+    language_id language;
+    language() = default;
+    ~language() = default;
 
-language parse_language_argument(int argc, char *argv[]);
+  public:
+    void set_language()
+    {
+        language = language_id::english;
+    }
+};
+language_id parse_language_argument(int argc, char *argv[]);
+}

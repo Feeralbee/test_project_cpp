@@ -2,13 +2,17 @@
 
 #include <string>
 
-language parse_language_argument(int argc, char *argv[])
+namespace ui
 {
-    language lang = language::english;
+language_id parse_language_argument(int argc, char *argv[])
+{
+    language_id lang = language_id::english;
     if (argc > 1)
     {
         if (std::string(argv[1]) == "-ru")
-            lang = language::russian;
+            lang = language_id::russian;
     }
     return lang;
+}
+
 }
