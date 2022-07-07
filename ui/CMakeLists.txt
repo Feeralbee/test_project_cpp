@@ -29,6 +29,8 @@ add_executable(ui_test
     tests/text_test.cpp
     tests/notifications_rus_test.cpp
     tests/notifications_en_test.cpp
+    tests/options_test.cpp
+    tests/notification_factory_test.cpp
 )
 
 target_link_libraries(ui_test   
