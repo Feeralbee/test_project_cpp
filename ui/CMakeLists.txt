@@ -26,11 +26,14 @@ target_include_directories(ui
 )
 ######################Tests###########################
 add_executable(ui_test 
-    tests/text_test.cpp
-    tests/notifications_rus_test.cpp
-    tests/notifications_en_test.cpp
-    tests/options_test.cpp
-    tests/notification_factory_test.cpp
+    tests/src/text_test.cpp
+    tests/src/notifications_rus_test.cpp
+    tests/src/notifications_en_test.cpp
+    tests/src/options_test.cpp
+    tests/src/notification_factory_test.cpp
+    tests/src/options_helper.cpp
+
+    tests/include/ui_test/options_helper.h
 )
 
 target_link_libraries(ui_test   
@@ -38,10 +41,14 @@ target_link_libraries(ui_test
     CONAN_PKG::gtest
 )
 
+target_include_directories(ui_test
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/tests/include
+)
+
 add_test(NAME ui_test
 	COMMAND ui_test
 )
-
 
 if(MSVC_IDE)
 	set_target_properties(ui_test ui PROPERTIES
