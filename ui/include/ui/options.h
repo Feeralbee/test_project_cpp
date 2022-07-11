@@ -1,22 +1,24 @@
 #pragma once
 #include <new>
+
 namespace ui
 {
-enum class language_id
-{
-    russian,
-    english
-};
 class options
 {
+  public:
+    enum class language_id
+    {
+        russian,
+        english
+    };
+
   protected:
-    language_id language;
+    language_id _language = language_id::english;
     options() = default;
     ~options() = default;
 
   public:
-    void set_en_language();
-    void set_ru_language();
+    void set_language(language_id lang);
     options(options &) = delete;
     void operator=(options &) = delete;
     void *operator new(std::size_t) = delete;

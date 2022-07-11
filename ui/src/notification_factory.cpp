@@ -12,8 +12,7 @@ namespace ui
 std::unique_ptr<notifications> notifications_factory::make()
 {
     auto &language = ui::options::get_options();
-    const auto lang = language.get_language();
-    if (lang == language_id::russian)
+    if (language.get_language() == options::language_id::russian)
     {
         return std::make_unique<notifications_rus>(notifications_rus());
     }

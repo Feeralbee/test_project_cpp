@@ -4,18 +4,9 @@
 
 namespace ui
 {
-void options::set_en_language()
+options::language_id options::get_language()
 {
-    language = language_id::english;
-}
-void options::set_ru_language()
-{
-    language = language_id::russian;
-}
-
-language_id options::get_language()
-{
-    return language;
+    return _language;
 }
 
 options &options::get_options()
@@ -24,4 +15,8 @@ options &options::get_options()
     return obj;
 }
 
+void options::set_language(language_id lang)
+{
+    _language = lang;
+}
 }
