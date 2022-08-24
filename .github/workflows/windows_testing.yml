@@ -12,26 +12,30 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Check folder after git clone
+      - name: Checking folder after git clone
         run : ls
-      - name: Check Python version
+      - name: Checking Python version
         run : python --version
-      - name: Check pip version
+      - name: Checking pip version
         run : pip --version
-      - name: Create folder for compile CMake
+      - name: Installing conan
+        run : pip install conan
+      - name: Checking conan version
+        run : conan --version
+      - name: Creating folder for compile CMake
         run : |
           mkdir build
           ls
-      - name: Compile CMake
+      - name: Compiling CMake
         run : |
-          echo "Compile CMake"
+          echo "Compiling CMake"
           cd build
           cmake ..
           ls
-          echo "Build project"
+          echo "Building project"
           cmake --build .
           ls
-      - name: Run tests
+      - name: Runing tests
         run : |
-          ctest -C<Debug>
+          ctest -C debug
 
