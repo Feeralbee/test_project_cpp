@@ -7,10 +7,29 @@ on:
   workflow_dispatch:
 
 jobs:
-  Ubuntu_latest:
+  Run_Docker_ubuntu_20-04:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
       - name: Check folder after git clone
         run : ls
+      - name: Run Docker
+        run : |
+          cd docker/linux
+          ./build-unix.sh
+      - name: Create folder for compile CMake
+        run : |
+          mkdir build
+          ls
+      - name: Compile CMake
+        run : |
+          echo "Compile CMake"
+          cd build
+          cmake ../feeralbee_test
+          ls
+          echo "Build project"
+          cmake --build .
+          ls
+      - name: Run tests
+        run : ctest
