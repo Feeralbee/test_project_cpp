@@ -37,5 +37,5 @@ jobs:
           ls
       - name: Runing tests
         run : |
-          ctest -C debug
-
+          cd build
+          ctest -C debug --rerun-failed --output-on-failure
