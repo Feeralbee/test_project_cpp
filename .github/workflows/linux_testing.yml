@@ -1,0 +1,16 @@
+name: Linux testing
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  Ubuntu_latest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check folder after git clone
+        run : ls
