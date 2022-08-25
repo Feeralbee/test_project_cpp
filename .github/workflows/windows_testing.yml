@@ -38,4 +38,4 @@ jobs:
       - name: Runing tests
         run : |
           cd build
-          ctest -C debug --rerun-failed --output-on-failure
+          ctest -C debug --output-on-failure
