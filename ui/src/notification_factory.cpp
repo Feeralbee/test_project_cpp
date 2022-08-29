@@ -11,14 +11,14 @@ namespace ui
 {
 std::unique_ptr<notifications> notifications_factory::make()
 {
-    auto &language = ui::options::get_options();
-    if (language.get_language() == options::language_id::russian)
+    return make(ui::options::get_options());
+}
+std::unique_ptr<notifications> notifications_factory::make(ui::options &app_options)
+{
+    if (app_options.get_language() == options::language_id::russian)
     {
         return std::make_unique<notifications_rus>(notifications_rus());
     }
-    else
-    {
-        return std::make_unique<notifications_en>(notifications_en());
-    }
+    return std::make_unique<notifications_en>(notifications_en());
 }
 }
