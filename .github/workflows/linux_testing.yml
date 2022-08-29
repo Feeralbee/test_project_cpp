@@ -17,7 +17,7 @@ jobs:
       - name: Run Docker
         run : |
           cd docker/linux
-          ./build-unix.sh
+          docker build "feeralbee_test" .
       - name: Create folder for compile CMake
         run : |
           mkdir build
