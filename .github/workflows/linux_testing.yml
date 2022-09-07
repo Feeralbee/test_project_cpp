@@ -18,18 +18,16 @@ jobs:
         run : |
           cd docker/linux
           docker build -t "feeralbee_test" .
-      - name: Create folder for compile CMake
-        run : |
-          mkdir build
-          ls
-      - name: Compile CMake
-        run : |
-          echo "Compile CMake"
-          cd build
-          cmake ../feeralbee_test
-          ls
-          echo "Build project"
-          cmake --build .
-          ls
-      - name: Run tests
-        run : ctest
+          docker run --privileged -v `cd ../..; pwd -P`:/feeralbeetest "feeralbee_test"
+          # echo "Create folder for compile CMake"
+          # mkdir build
+          # ls
+          # echo "Compile CMake"
+          # cd build
+          # cmake ../feeralbee_test
+          # ls
+          # echo "Build project"
+          # cmake --build .
+          # ls
+          # echo "Run tests"
+          # ctest
