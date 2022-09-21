@@ -20,4 +20,7 @@ add_subdirectory(readers)
 add_subdirectory(ui)
 add_subdirectory(unicode_helper)
 add_subdirectory(test_resources)
+if (WIN32)
+    add_subdirectory(winapi)
+endif()
 
