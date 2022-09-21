@@ -7,3 +7,5 @@ target_link_libraries(win_api
     readers
     ui
 )
+
+add_definitions(-DUNICODE -D_UNICODE)

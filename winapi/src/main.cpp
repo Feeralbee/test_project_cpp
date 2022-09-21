@@ -1,16 +1,15 @@
 #include <Windows.h>
 #include <string>
-
-typedef std::basic_string<TCHAR, std::char_traits<TCHAR>, std::allocator<TCHAR>> String;
+#include <tchar.h>
 
 //Функция окна
-LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc(HWND hWnd, UINT messege, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;        //создаём контекст устройства
     PAINTSTRUCT ps; //создаём экземпляр структуры графического вывода
-    static String str;
+    static std::wstring str;
     //Цикл обработки сообщений
-    switch (messg)
+    switch (messege)
     {
         //сообщение рисования
     case WM_CHAR:
@@ -22,10 +21,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
         hdc = BeginPaint(hWnd, &ps);
         //здесь вы обычно вставляете свой текст:
         SetBkColor(hdc, RGB(255, 255, 0));
-        auto font = CreateFont(20, 0, 0, 0, 400, NULL, NULL, NULL, DEFAULT_CHARSET, );
         SelectObject(hdc, GetStockObject(DEFAULT_GUI_FONT));
-        TextOut(hdc, 250, 150, "Введите путь к файлу: ", 22);
-        TextOut(hdc, 250, 180, "                      ", 22);
+        TextOut(hdc, 250, 150, _T("Введите путь к файлу: "), 22);
+        TextOut(hdc, 250, 180, _T("                      "), 22);
         TextOut(hdc, 250, 180, str.data(), int(str.size()));
         //закругляемся
         //обновляем окно
@@ -38,14 +36,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0); //Посылаем сообщение выхода с кодом 0 - нормальное завершение
         break;
     default:
-        return (DefWindowProc(hWnd, messg, wParam, lParam));
+        return (DefWindowProc(hWnd, messege, wParam, lParam));
         //освобождаем очередь приложения от нераспознаных
     }
     return 0;
 }
 
 //объявляем имя программы
-char szProgName[] = "febe_test";
+TCHAR szProgName[] = _T("febe_test");
 
 int WINAPI WinMain(HINSTANCE descriptor, HINSTANCE, LPSTR, int nCmdShow)
 {
@@ -67,7 +65,7 @@ int WINAPI WinMain(HINSTANCE descriptor, HINSTANCE, LPSTR, int nCmdShow)
         return 0;
     //Создадим окно в памяти, заполнив аргументы CreateWindow
     hWnd = CreateWindow(szProgName,            //Имя программы
-                        "febe_test",           //Заголовок окна
+                        _T("febe_test"),       //Заголовок окна
                         WS_OVERLAPPEDWINDOW,   //Стиль окна - перекрывающееся
                         550,                   //положение окна на экране по х
                         210,                   //по у
