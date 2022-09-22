@@ -2,14 +2,37 @@
 #include <string>
 #include <tchar.h>
 
+void paint(HWND &hWnd)
+{
+    HDC hdc;
+    PAINTSTRUCT paint_struct;
+    hdc = BeginPaint(hWnd, &paint_struct);
+    HFONT font = CreateFont(25, 15, 0, 0, FW_MEDIUM, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+                            CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, FF_ROMAN, _T("main_font"));
+    SetBkMode(hdc, TRANSPARENT);
+    SetTextColor(hdc, RGB(255, 255, 255));
+    SelectObject(hdc, font);
+    TextOut(hdc, 11, 70, _T("Input file path:"), 16);
+}
+
+void create_text_box_and_button(HWND &hWnd, HWND &text_box)
+{
+    CreateWindow(_T("BUTTON"), _T("Output"), WS_BORDER | WS_CHILD | WS_VISIBLE, 420, 100, 70, 20, hWnd, (HMENU)1, NULL,
+                 NULL);
+    text_box =
+        CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, 10, 100, 400, 20, hWnd, NULL, NULL, NULL);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT messege, WPARAM wParam, LPARAM lParam)
 {
     HWND file_path_text_box;
     switch (messege)
     {
+    case WM_PAINT:
+        paint(hWnd);
+        break;
     case WM_CREATE:
-        file_path_text_box = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, 10, 100, 400, 20, hWnd,
-                                          NULL, NULL, NULL);
+        create_text_box_and_button(hWnd, file_path_text_box);
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
