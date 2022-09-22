@@ -2,52 +2,29 @@
 #include <string>
 #include <tchar.h>
 
-//Функция окна
 LRESULT CALLBACK WndProc(HWND hWnd, UINT messege, WPARAM wParam, LPARAM lParam)
 {
-    HDC hdc;        //создаём контекст устройства
-    PAINTSTRUCT ps; //создаём экземпляр структуры графического вывода
-    static std::wstring str;
-    //Цикл обработки сообщений
+    HWND file_path_text_box;
     switch (messege)
     {
-        //сообщение рисования
-    case WM_CHAR:
-        str += (TCHAR)wParam;
-        InvalidateRect(hWnd, NULL, TRUE);
+    case WM_CREATE:
+        file_path_text_box = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, 10, 100, 400, 20, hWnd,
+                                          NULL, NULL, NULL);
         break;
-    case WM_PAINT:
-        //начинаем рисовать
-        hdc = BeginPaint(hWnd, &ps);
-        //здесь вы обычно вставляете свой текст:
-        SetBkColor(hdc, RGB(255, 255, 0));
-        SelectObject(hdc, GetStockObject(DEFAULT_GUI_FONT));
-        TextOut(hdc, 250, 150, _T("Введите путь к файлу: "), 22);
-        TextOut(hdc, 250, 180, _T("                      "), 22);
-        TextOut(hdc, 250, 180, str.data(), int(str.size()));
-        //закругляемся
-        //обновляем окно
-        ValidateRect(hWnd, NULL);
-        //заканчиваем рисовать
-        EndPaint(hWnd, &ps);
-        break;
-        //сообщение выхода - разрушение окна
     case WM_DESTROY:
-        PostQuitMessage(0); //Посылаем сообщение выхода с кодом 0 - нормальное завершение
+        PostQuitMessage(0);
         break;
     default:
         return (DefWindowProc(hWnd, messege, wParam, lParam));
-        //освобождаем очередь приложения от нераспознаных
     }
     return 0;
 }
 
-//объявляем имя программы
 TCHAR szProgName[] = _T("febe_test");
 
 int WINAPI WinMain(HINSTANCE descriptor, HINSTANCE, LPSTR, int nCmdShow)
 {
-    HWND hWnd; //идентификатор окна
+    HWND hWnd;
     MSG lpMsg;
     WNDCLASS main_window;                              //создаём экземпляр структуры WNDCLASS и начинаем её заполнять
     main_window.lpszClassName = szProgName;            //имя программы
@@ -60,10 +37,8 @@ int WINAPI WinMain(HINSTANCE descriptor, HINSTANCE, LPSTR, int nCmdShow)
     main_window.style = CS_HREDRAW | CS_VREDRAW;                      //стиль окна - перерисовываемое по х и по у
     main_window.cbClsExtra = 0;
     main_window.cbWndExtra = 0;
-    //Если не удалось зарегистрировать класс окна - выходим
     if (!RegisterClass(&main_window))
         return 0;
-    //Создадим окно в памяти, заполнив аргументы CreateWindow
     hWnd = CreateWindow(szProgName,            //Имя программы
                         _T("febe_test"),       //Заголовок окна
                         WS_OVERLAPPEDWINDOW,   //Стиль окна - перекрывающееся
@@ -75,15 +50,12 @@ int WINAPI WinMain(HINSTANCE descriptor, HINSTANCE, LPSTR, int nCmdShow)
                         (HMENU)NULL,           //идентификатор меню
                         (HINSTANCE)descriptor, //идентификатор экземпляра программы
                         (HINSTANCE)NULL);      //отсутствие дополнительных параметров
-    //Выводим окно из памяти на экран
     ShowWindow(hWnd, nCmdShow);
-    //Обновим содержимое окна
     UpdateWindow(hWnd);
-    //Цикл обработки сообщений
     while (GetMessage(&lpMsg, NULL, 0, 0))
-    {                             //Получаем сообщение из очереди
-        TranslateMessage(&lpMsg); //Преобразуем сообщения клавиш в символы
-        DispatchMessage(&lpMsg);  //Передаём сообщение соответствующей функции окна
+    {
+        TranslateMessage(&lpMsg);
+        DispatchMessage(&lpMsg);
     }
     return 0;
 }
