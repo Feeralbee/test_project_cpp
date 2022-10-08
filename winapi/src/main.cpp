@@ -6,11 +6,19 @@ TCHAR szProgName[] = _T("febe_test");
 
 HWND button;
 HWND text_box;
+HWND static_text;
 RECT main_window_client_rect = {0, 0, 0, 0};
+
+void create_static_text(HWND &main_window)
+{
+    int text_box_x = (main_window_client_rect.right / 2) - 340;
+    int text_box_y = (main_window_client_rect.bottom / 2) - 40;
+    static_text = CreateWindowEx(WS_EX_TRANSPARENT, _T("STATIC"), _T("Input file path:"), WS_VISIBLE | WS_CHILD,
+                                 text_box_x, text_box_y, 100, 18, main_window, NULL, NULL, NULL);
+}
 
 void create_text_box(HWND &main_window, LPWSTR &file_path)
 {
-    GetClientRect(main_window, &main_window_client_rect);
     int text_box_x = (main_window_client_rect.right / 2) - 235;
     int text_box_y = (main_window_client_rect.bottom / 2) - 40;
     text_box = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, text_box_x, text_box_y, 400, 20,
@@ -20,7 +28,6 @@ void create_text_box(HWND &main_window, LPWSTR &file_path)
 
 void create_button_output(HWND &main_window)
 {
-    GetClientRect(main_window, &main_window_client_rect);
     int button_x = (main_window_client_rect.right / 2) - 70;
     int button_y = (main_window_client_rect.bottom / 2) - 15;
     button = CreateWindow(_T("BUTTON"), _T("Output"), WS_BORDER | WS_CHILD | WS_VISIBLE, button_x, button_y, 70, 20,
@@ -35,6 +42,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_SIZE: {
         DestroyWindow(button);
         DestroyWindow(text_box);
+        DestroyWindow(static_text);
+        GetClientRect(hWnd, &main_window_client_rect);
+        create_static_text(hWnd);
         create_text_box(hWnd, file_path);
         create_button_output(hWnd);
         break;
