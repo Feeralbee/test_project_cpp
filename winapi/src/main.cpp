@@ -4,35 +4,39 @@
 
 TCHAR szProgName[] = _T("febe_test");
 
-int create_text_box_and_button(HWND &hWnd, HWND &text_box)
-{
-    auto static_text =
-        CreateWindowEx(WS_EX_TRANSPARENT | WS_EX_LAYERED | WS_EX_TOOLWINDOW, _T("STATIC"), _T("Input file path"),
-                       WS_BORDER | WS_CHILD | WS_VISIBLE, 11, 70, 95, 20, hWnd, NULL, NULL, NULL);
-    static_text;
+HWND button;
+HWND text_box;
+RECT main_window_client_rect = {0, 0, 0, 0};
 
-    CreateWindow(_T("BUTTON"), _T("Output"), WS_BORDER | WS_CHILD | WS_VISIBLE, 420, 100, 70, 20, hWnd, (HMENU)1, NULL,
-                 NULL);
-    text_box =
-        CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, 10, 100, 400, 20, hWnd, NULL, NULL, NULL);
-    if (text_box != NULL)
-        return 1;
-    return 0;
+void create_text_box(HWND &main_window, LPWSTR &file_path)
+{
+    GetClientRect(main_window, &main_window_client_rect);
+    int text_box_x = (main_window_client_rect.right / 2) - 235;
+    int text_box_y = (main_window_client_rect.bottom / 2) - 40;
+    text_box = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, text_box_x, text_box_y, 400, 20,
+                            main_window, NULL, NULL, NULL);
+    file_path;
+}
+
+void create_button_output(HWND &main_window)
+{
+    GetClientRect(main_window, &main_window_client_rect);
+    int button_x = (main_window_client_rect.right / 2) - 70;
+    int button_y = (main_window_client_rect.bottom / 2) - 15;
+    button = CreateWindow(_T("BUTTON"), _T("Output"), WS_BORDER | WS_CHILD | WS_VISIBLE, button_x, button_y, 70, 20,
+                          main_window, (HMENU)1, NULL, NULL);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    LPWSTR file_path{};
     switch (message)
     {
-    case WM_PAINT: {
-
-        break;
-    }
-    case WM_CREATE: {
-        HWND file_path_text_box;
-        LPWSTR file_path{};
-        if (create_text_box_and_button(hWnd, file_path_text_box) == 1)
-            GetWindowText(file_path_text_box, file_path, GetWindowTextLength(file_path_text_box));
+    case WM_SIZE: {
+        DestroyWindow(button);
+        DestroyWindow(text_box);
+        create_text_box(hWnd, file_path);
+        create_button_output(hWnd);
         break;
     }
     case WM_DESTROY:
