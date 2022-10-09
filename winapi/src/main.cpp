@@ -11,15 +11,16 @@ RECT main_window_client_rect = {0, 0, 0, 0};
 
 void create_static_text(HWND &main_window)
 {
-    int text_box_x = (main_window_client_rect.right / 2) - 340;
-    int text_box_y = (main_window_client_rect.bottom / 2) - 40;
+    int text_box_x = (main_window_client_rect.right / 2) - 325;
+    int text_box_y = (main_window_client_rect.bottom / 2) - 39;
     static_text = CreateWindowEx(WS_EX_TRANSPARENT, _T("STATIC"), _T("Input file path:"), WS_VISIBLE | WS_CHILD,
                                  text_box_x, text_box_y, 100, 18, main_window, NULL, NULL, NULL);
+    SetClassLongPtr(static_text, GCLP_HBRBACKGROUND, TRANSPARENT);
 }
 
 void create_text_box(HWND &main_window, LPWSTR &file_path)
 {
-    int text_box_x = (main_window_client_rect.right / 2) - 235;
+    int text_box_x = (main_window_client_rect.right / 2) - 220;
     int text_box_y = (main_window_client_rect.bottom / 2) - 40;
     text_box = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, text_box_x, text_box_y, 400, 20,
                             main_window, NULL, NULL, NULL);
@@ -79,8 +80,8 @@ int WINAPI WinMain(HINSTANCE descriptor, HINSTANCE, LPSTR, int nCmdShow)
     setup_main_window(descriptor, main_window);
     if (!RegisterClass(&main_window))
         return 0;
-    HWND hWnd = CreateWindow(szProgName, _T("febe_test"), WS_OVERLAPPEDWINDOW, 550, 210, 800, 500, (HWND)NULL,
-                             (HMENU)NULL, (HINSTANCE)descriptor, (HINSTANCE)NULL);
+    HWND hWnd = CreateWindow(szProgName, _T("febe_test"), WS_OVERLAPPEDWINDOW, 550, 210, 800, 500, NULL, NULL,
+                             descriptor, NULL);
     if (hWnd != NULL)
     {
         ShowWindow(hWnd, nCmdShow);
