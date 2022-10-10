@@ -15,16 +15,14 @@ void create_static_text(HWND &main_window)
     int text_box_y = (main_window_client_rect.bottom / 2) - 39;
     static_text = CreateWindowEx(WS_EX_TRANSPARENT, _T("STATIC"), _T("Input file path:"), WS_VISIBLE | WS_CHILD,
                                  text_box_x, text_box_y, 100, 18, main_window, NULL, NULL, NULL);
-    SetClassLongPtr(static_text, GCLP_HBRBACKGROUND, TRANSPARENT);
 }
 
-void create_text_box(HWND &main_window, LPWSTR &file_path)
+void create_text_box(HWND &main_window)
 {
     int text_box_x = (main_window_client_rect.right / 2) - 220;
     int text_box_y = (main_window_client_rect.bottom / 2) - 40;
     text_box = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, text_box_x, text_box_y, 400, 20,
                             main_window, NULL, NULL, NULL);
-    file_path;
 }
 
 void create_button_output(HWND &main_window)
@@ -37,20 +35,26 @@ void create_button_output(HWND &main_window)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    LPWSTR file_path{};
     switch (message)
     {
+    case WM_CTLCOLORSTATIC: {
+        SetTextColor((HDC)wParam, RGB(255, 255, 255));
+        SetBkMode((HDC)wParam, TRANSPARENT);
+        return GetClassLongPtr(hWnd, GCLP_HBRBACKGROUND);
+    }
+    break;
     case WM_SIZE: {
         DestroyWindow(button);
         DestroyWindow(text_box);
         DestroyWindow(static_text);
         GetClientRect(hWnd, &main_window_client_rect);
         create_static_text(hWnd);
-        create_text_box(hWnd, file_path);
+        create_text_box(hWnd);
         create_button_output(hWnd);
         break;
     }
     case WM_DESTROY:
+        DeleteObject((HBRUSH)GetClassLongPtr(hWnd, GCLP_HBRBACKGROUND));
         PostQuitMessage(0);
         break;
     default:
