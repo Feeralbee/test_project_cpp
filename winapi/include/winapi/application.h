@@ -9,7 +9,7 @@ namespace winapi
 class application
 {
   private:
-    std::wstring programm_name = _T("febe_test");
+    const std::wstring programm_name = _T("febe_test");
 
   public:
     application() = default;

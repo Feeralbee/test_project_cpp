@@ -5,19 +5,9 @@ namespace winapi
 {
 main_window::main_window()
 {
-    auto app = application::get_application();
     std::memset(&main_wndclass, 0, sizeof main_wndclass);
-    if (setup_main_wndclass())
+    if (!setup_main_wndclass())
     {
-        window = CreateWindow(app->get_program_name().c_str(), _T("febe_test"), WS_OVERLAPPEDWINDOW, 550, 210, 800, 500,
-                              NULL, NULL, (HINSTANCE)GetModuleHandle(NULL), NULL);
-        if (window != NULL)
-        {
-            button = CreateWindow(_T("BUTTON"), _T("Output"), WS_BORDER | WS_CHILD | WS_VISIBLE, 100, 100, 70, 20,
-                                  window, (HMENU)1, NULL, NULL);
-            text_box = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, 100, 150, 400, 20, window,
-                                    NULL, NULL, NULL);
-        }
     }
 }
 
@@ -44,13 +34,16 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
     }
     break;
     case WM_SIZE: {
-        DestroyWindow(button);
-        DestroyWindow(text_box);
-        DestroyWindow(static_text);
         GetClientRect(hWnd, &main_window_client_rect);
-        create_static_text(hWnd);
-        create_text_box(hWnd);
-        create_button_output(hWnd);
+        break;
+    }
+    case WM_CREATE: {
+        if (create_main_window())
+        {
+            create_button();
+            create_text_box();
+            create_static_text();
+        }
         break;
     }
     case WM_DESTROY:
@@ -65,7 +58,8 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 
 bool main_window::setup_main_wndclass()
 {
-    main_wndclass.lpszClassName = application::get_application->;
+    auto app = application::get_application();
+    main_wndclass.lpszClassName = app->get_program_name().c_str();
     main_wndclass.hInstance = (HINSTANCE)GetModuleHandle(NULL);
     main_wndclass.lpfnWndProc = WndProc;
     main_wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -80,4 +74,35 @@ bool main_window::setup_main_wndclass()
     return 1;
 }
 
+bool main_window::create_main_window()
+{
+    auto app = application::get_application();
+    window = CreateWindow(app->get_program_name().c_str(), _T("febe_test"), WS_OVERLAPPEDWINDOW, 550, 210, 800, 500,
+                          NULL, NULL, (HINSTANCE)GetModuleHandle(NULL), NULL);
+    if (window != NULL)
+        return 1;
+    return 0;
+}
+bool main_window::create_button()
+{
+    button = CreateWindow(_T("BUTTON"), _T("Output"), WS_BORDER | WS_CHILD | WS_VISIBLE, 100, 100, 70, 20, window,
+                          (HMENU)1, NULL, NULL);
+    if (button != NULL)
+        return 1;
+    return 0;
+}
+bool main_window::create_static_text()
+{
+    if (static_text != NULL)
+        return 1;
+    return 0;
+}
+bool main_window::create_text_box()
+{
+    text_box = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, 100, 150, 400, 20, window, NULL,
+                            NULL, NULL);
+    if (text_box != NULL)
+        return 1;
+    return 0;
+}
 }
