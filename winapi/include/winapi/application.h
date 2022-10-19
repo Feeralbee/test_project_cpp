@@ -1,4 +1,6 @@
 #pragma once
+#include "winapi/main_window.h"
+
 #include <Windows.h>
 #include <memory>
 #include <string>
@@ -9,12 +11,10 @@ namespace winapi
 class application
 {
   private:
-    const std::wstring programm_name = _T("febe_test");
-
   public:
     application() = default;
     ~application() = default;
     static std::unique_ptr<application> get_application();
-    std::wstring get_program_name();
+    std::unique_ptr<main_window> create_main_window();
 };
 }

@@ -6,8 +6,9 @@ namespace winapi
 main_window::main_window()
 {
     std::memset(&main_wndclass, 0, sizeof main_wndclass);
-    if (!setup_main_wndclass())
+    if (setup_main_wndclass())
     {
+        create_main_window();
     }
 }
 
@@ -34,16 +35,14 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
     }
     break;
     case WM_SIZE: {
-        GetClientRect(hWnd, &main_window_client_rect);
+        // GetClientRect(hWnd, &main_window_client_rect);
         break;
     }
     case WM_CREATE: {
-        if (create_main_window())
-        {
-            create_button();
-            create_text_box();
-            create_static_text();
-        }
+        auto create_struct = reinterpret_cast<CREATESTRUCT *>(lParam);
+        auto window_object = reinterpret_cast<main_window *>(create_struct->lpCreateParams);
+        window_object->on_create();
+        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window_object));
         break;
     }
     case WM_DESTROY:
@@ -58,8 +57,7 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 
 bool main_window::setup_main_wndclass()
 {
-    auto app = application::get_application();
-    main_wndclass.lpszClassName = app->get_program_name().c_str();
+    main_wndclass.lpszClassName = window_class_name.c_str();
     main_wndclass.hInstance = (HINSTANCE)GetModuleHandle(NULL);
     main_wndclass.lpfnWndProc = WndProc;
     main_wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -67,7 +65,7 @@ bool main_window::setup_main_wndclass()
     main_wndclass.lpszMenuName = 0;
     main_wndclass.hbrBackground = (HBRUSH)GetStockObject(DKGRAY_BRUSH);
     main_wndclass.style = CS_HREDRAW | CS_VREDRAW;
-    main_wndclass.cbClsExtra = 0;
+    main_wndclass.cbClsExtra = (int)GetClassLongPtr(window, GWLP_USERDATA);
     main_wndclass.cbWndExtra = 0;
     if (!RegisterClass(&main_wndclass))
         return 0;
@@ -76,25 +74,25 @@ bool main_window::setup_main_wndclass()
 
 bool main_window::create_main_window()
 {
-    auto app = application::get_application();
-    window = CreateWindow(app->get_program_name().c_str(), _T("febe_test"), WS_OVERLAPPEDWINDOW, 550, 210, 800, 500,
-                          NULL, NULL, (HINSTANCE)GetModuleHandle(NULL), NULL);
+    window = CreateWindow(window_class_name.c_str(), _T("febe_test"), WS_OVERLAPPEDWINDOW, 550, 210, 800, 500, NULL,
+                          NULL, (HINSTANCE)GetModuleHandle(NULL), NULL);
     if (window != NULL)
         return 1;
     return 0;
 }
 bool main_window::create_button()
 {
-    button = CreateWindow(_T("BUTTON"), _T("Output"), WS_BORDER | WS_CHILD | WS_VISIBLE, 100, 100, 70, 20, window,
-                          (HMENU)1, NULL, NULL);
+    if (window != NULL)
+    {
+        button = CreateWindow(_T("BUTTON"), _T("Output"), WS_BORDER | WS_CHILD | WS_VISIBLE, 100, 100, 70, 20, window,
+                              (HMENU)1, NULL, NULL);
+    }
     if (button != NULL)
         return 1;
     return 0;
 }
 bool main_window::create_static_text()
 {
-    if (static_text != NULL)
-        return 1;
     return 0;
 }
 bool main_window::create_text_box()
@@ -104,5 +102,27 @@ bool main_window::create_text_box()
     if (text_box != NULL)
         return 1;
     return 0;
+}
+bool main_window::run(int nCmdShow)
+{
+    if (window != NULL)
+    {
+        ShowWindow(window, nCmdShow);
+        UpdateWindow(window);
+        MSG lpMsg;
+        while (GetMessage(&lpMsg, NULL, 0, 0))
+        {
+            TranslateMessage(&lpMsg);
+            DispatchMessage(&lpMsg);
+        }
+    }
+    return GetLastError();
+}
+bool main_window::on_create()
+{
+    create_static_text();
+    create_button();
+    // create_text_box();
+    return GetLastError();
 }
 }

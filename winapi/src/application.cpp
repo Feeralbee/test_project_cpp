@@ -5,10 +5,11 @@ namespace winapi
 {
 std::unique_ptr<application> application::get_application()
 {
-    return std::make_unique<application>(application());
+    return std::make_unique<application>();
 }
-std::wstring application::get_program_name()
+
+std::unique_ptr<main_window> application::create_main_window()
 {
-    return programm_name;
+    return std::make_unique<main_window>();
 }
 }
