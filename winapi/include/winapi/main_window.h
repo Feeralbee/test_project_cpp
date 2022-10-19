@@ -19,7 +19,8 @@ class main_window
     bool create_button();
     bool create_text_box();
     bool create_static_text();
-    bool on_create();
+    bool on_create(HWND parent);
+    bool on_size(int width, int heigth);
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
   public:
