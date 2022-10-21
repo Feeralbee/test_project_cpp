@@ -20,6 +20,7 @@ class main_window
     bool create_text_box();
     bool create_static_text();
     bool on_create(HWND parent);
+    bool on_command(WPARAM wParam);
     bool on_size(const int width, const int heigth);
     bool move_text_box(const int width, const int heigth);
     bool move_static_text(const int width, const int heigth);

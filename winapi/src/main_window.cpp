@@ -1,5 +1,11 @@
 #include "winapi/main_window.h"
+#include "readers/data.h"
+#include "readers/factory.h"
 #include "winapi/application.h"
+#include <string>
+#include <vector>
+
+#define BUTTON_OUTPUT 1
 
 namespace winapi
 {
@@ -52,6 +58,12 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
         LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
         lpMMI->ptMinTrackSize.x = GetSystemMetrics(SM_CXSCREEN) / 3;
         lpMMI->ptMinTrackSize.y = GetSystemMetrics(SM_CYSCREEN) / 5;
+        break;
+    }
+    case WM_COMMAND: {
+        const auto window_object_pointer = GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        const auto window_object = reinterpret_cast<main_window *>(window_object_pointer);
+        window_object->on_command(wParam);
         break;
     }
     case WM_DESTROY:
@@ -118,8 +130,8 @@ bool main_window::create_button()
     const int button_x = (client_width / 2 - button_width / 2);
     const int button_y = ((client_height / 2 - button_height / 2) + button_height * 2);
 
-    button = CreateWindow(_T("BUTTON"), _T("Output"), WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER, button_x, button_y,
-                          button_width, button_height, window, (HMENU)1, NULL, NULL);
+    button = CreateWindow(_T("BUTTON"), _T("Output"), WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER | BS_PUSHBUTTON,
+                          button_x, button_y, button_width, button_height, window, (HMENU)BUTTON_OUTPUT, NULL, NULL);
     if (button != NULL)
         return 1;
     return 0;
@@ -212,7 +224,7 @@ bool main_window::move_button(const int width, const int heigth)
     const int button_x = (width / 2 - button_width / 2);
     const int button_y = ((heigth / 2 - button_height / 2) + button_height * 2);
 
-    const auto result = MoveWindow(button, button_x, button_y, button_width, button_height, NULL);
+    const auto result = MoveWindow(button, button_x, button_y, button_width, button_height, TRUE);
 
     return result;
 }
@@ -225,7 +237,7 @@ bool main_window::move_text_box(const int width, const int heigth)
     const int text_box_x = (width / 2) - (text_box_width / 2);
     const int text_box_y = (heigth / 2) - (text_box_height / 2);
 
-    const auto result = MoveWindow(text_box, text_box_x, text_box_y, text_box_width, text_box_height, NULL);
+    const auto result = MoveWindow(text_box, text_box_x, text_box_y, text_box_width, text_box_height, TRUE);
 
     return result;
 }
@@ -239,8 +251,26 @@ bool main_window::move_static_text(const int width, const int heigth)
     const int static_text_y = (heigth / 2) - (20 / 2);
 
     const auto result =
-        MoveWindow(static_text, static_text_x, static_text_y, static_text_width, static_text_height, NULL);
+        MoveWindow(static_text, static_text_x, static_text_y, static_text_width, static_text_height, TRUE);
 
     return result;
+}
+
+bool main_window::on_command(WPARAM wParam)
+{
+    switch (LOWORD(wParam))
+    {
+    case BUTTON_OUTPUT: {
+        TCHAR text[300];
+        std::memset(text, 0, sizeof text);
+        GetWindowText(text_box, text, GetWindowTextLength(text_box) + 1);
+        if (text != 0)
+        {
+            MessageBox(window, L"Message", text, MB_OK);
+        }
+        break;
+    }
+    }
+    return 0;
 }
 }
