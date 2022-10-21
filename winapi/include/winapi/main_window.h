@@ -10,13 +10,13 @@ class main_window
   private:
     const std::wstring window_class_name = _T("main_window");
     HWND window = NULL;
-    HWND button = NULL;
+    HWND button_output = NULL;
     HWND text_box = NULL;
     HWND static_text = NULL;
     WNDCLASS main_wndclass;
     bool setup_main_wndclass();
     bool create_main_window();
-    bool create_button();
+    bool create_button_output();
     bool create_text_box();
     bool create_static_text();
     bool on_create(HWND parent);

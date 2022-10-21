@@ -22,8 +22,8 @@ main_window::~main_window()
 {
     if (window != NULL)
         DestroyWindow(window);
-    if (button != NULL)
-        DestroyWindow(button);
+    if (button_output != NULL)
+        DestroyWindow(button_output);
     if (text_box != NULL)
         DestroyWindow(text_box);
     if (static_text != NULL)
@@ -117,7 +117,7 @@ bool main_window::create_main_window()
     return 0;
 }
 
-bool main_window::create_button()
+bool main_window::create_button_output()
 {
     RECT client_rect;
     GetClientRect(window, &client_rect);
@@ -130,9 +130,10 @@ bool main_window::create_button()
     const int button_x = (client_width / 2 - button_width / 2);
     const int button_y = ((client_height / 2 - button_height / 2) + button_height * 2);
 
-    button = CreateWindow(_T("BUTTON"), _T("Output"), WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER | BS_PUSHBUTTON,
-                          button_x, button_y, button_width, button_height, window, (HMENU)BUTTON_OUTPUT, NULL, NULL);
-    if (button != NULL)
+    button_output =
+        CreateWindow(_T("BUTTON"), _T("Output"), WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER | BS_PUSHBUTTON, button_x,
+                     button_y, button_width, button_height, window, (HMENU)BUTTON_OUTPUT, NULL, NULL);
+    if (button_output != NULL)
         return 1;
     return 0;
 }
@@ -201,7 +202,7 @@ bool main_window::on_create(HWND parent)
     if (window != NULL)
     {
         auto result = create_static_text();
-        result |= create_button();
+        result |= create_button_output();
         result |= create_text_box();
         return result;
     }
@@ -224,7 +225,7 @@ bool main_window::move_button(const int width, const int heigth)
     const int button_x = (width / 2 - button_width / 2);
     const int button_y = ((heigth / 2 - button_height / 2) + button_height * 2);
 
-    const auto result = MoveWindow(button, button_x, button_y, button_width, button_height, TRUE);
+    const auto result = MoveWindow(button_output, button_x, button_y, button_width, button_height, TRUE);
 
     return result;
 }
