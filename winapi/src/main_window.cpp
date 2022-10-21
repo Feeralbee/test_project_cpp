@@ -6,6 +6,7 @@
 #include <vector>
 
 #define BUTTON_OUTPUT 1
+#define BUTTON_BROWSE 2
 
 namespace winapi
 {
@@ -43,8 +44,8 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
         const auto window_object_pointer = GetWindowLongPtr(hWnd, GWLP_USERDATA);
         const auto window_object = reinterpret_cast<main_window *>(window_object_pointer);
         const auto width = LOWORD(lParam);
-        const auto heigth = HIWORD(lParam);
-        window_object->on_size(width, heigth);
+        const auto height = HIWORD(lParam);
+        window_object->on_size(width, height);
         break;
     }
     case WM_CREATE: {
@@ -138,6 +139,27 @@ bool main_window::create_button_output()
     return 0;
 }
 
+bool main_window::create_button_browse()
+{
+    RECT client_rect;
+    GetClientRect(window, &client_rect);
+    const int client_height = client_rect.bottom - client_rect.top;
+    const int client_width = client_rect.right - client_rect.left;
+
+    const int button_height = 22;
+    const int button_width = 100;
+
+    const int button_x = (client_width / 2 + client_width / 4) + button_width / 50;
+    const int button_y = (client_height / 2) - button_height / 2;
+
+    button_browse =
+        CreateWindow(_T("BUTTON"), _T("Browse"), WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER | BS_PUSHBUTTON, button_x,
+                     button_y, button_width, button_height, window, (HMENU)BUTTON_BROWSE, NULL, NULL);
+    if (button_browse != NULL)
+        return 1;
+    return 0;
+}
+
 bool main_window::create_static_text()
 {
     RECT client_rect;
@@ -203,53 +225,68 @@ bool main_window::on_create(HWND parent)
     {
         auto result = create_static_text();
         result |= create_button_output();
+        result |= create_button_browse();
         result |= create_text_box();
         return result;
     }
     return 0;
 }
 
-bool main_window::on_size(const int width, const int heigth)
+bool main_window::on_size(const int width, const int height)
 {
-    auto result = move_text_box(width, heigth);
-    result |= move_button(width, heigth);
-    result |= move_static_text(width, heigth);
+    auto result = move_text_box(width, height);
+    result |= move_button_output(width, height);
+    result |= move_button_browse(width, height);
+    result |= move_static_text(width, height);
     return result;
 }
 
-bool main_window::move_button(const int width, const int heigth)
+bool main_window::move_button_output(const int width, const int height)
 {
     const int button_height = 25;
     const int button_width = 100;
 
     const int button_x = (width / 2 - button_width / 2);
-    const int button_y = ((heigth / 2 - button_height / 2) + button_height * 2);
+    const int button_y = ((height / 2 - button_height / 2) + button_height * 2);
 
     const auto result = MoveWindow(button_output, button_x, button_y, button_width, button_height, TRUE);
 
     return result;
 }
 
-bool main_window::move_text_box(const int width, const int heigth)
+bool main_window::move_button_browse(const int width, const int height)
+{
+    const int button_height = 22;
+    const int button_width = 100;
+
+    const int button_x = (width / 2 + width / 4) + button_width / 50;
+    const int button_y = (height / 2) - button_height / 2;
+
+    const auto result = MoveWindow(button_browse, button_x, button_y, button_width, button_height, TRUE);
+
+    return result;
+}
+
+bool main_window::move_text_box(const int width, const int height)
 {
     const int text_box_height = 20;
     const int text_box_width = width / 2;
 
     const int text_box_x = (width / 2) - (text_box_width / 2);
-    const int text_box_y = (heigth / 2) - (text_box_height / 2);
+    const int text_box_y = (height / 2) - (text_box_height / 2);
 
     const auto result = MoveWindow(text_box, text_box_x, text_box_y, text_box_width, text_box_height, TRUE);
 
     return result;
 }
 
-bool main_window::move_static_text(const int width, const int heigth)
+bool main_window::move_static_text(const int width, const int height)
 {
     const int static_text_width = 100;
     const int static_text_height = static_text_width / 4;
 
     const int static_text_x = (width / 2 - width / 4) - static_text_width;
-    const int static_text_y = (heigth / 2) - (20 / 2);
+    const int static_text_y = (height / 2) - (20 / 2);
 
     const auto result =
         MoveWindow(static_text, static_text_x, static_text_y, static_text_width, static_text_height, TRUE);
