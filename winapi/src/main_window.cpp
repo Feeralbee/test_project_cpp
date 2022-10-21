@@ -33,20 +33,25 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
         SetBkMode((HDC)wParam, TRANSPARENT);
         return GetClassLongPtr(hWnd, GCLP_HBRBACKGROUND);
     }
-    break;
     case WM_SIZE: {
-        auto window_object_pointer = GetWindowLongPtr(hWnd, GWLP_USERDATA);
-        auto window_object = reinterpret_cast<main_window *>(window_object_pointer);
-        auto width = LOWORD(lParam);
-        auto heigth = HIWORD(lParam);
+        const auto window_object_pointer = GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        const auto window_object = reinterpret_cast<main_window *>(window_object_pointer);
+        const auto width = LOWORD(lParam);
+        const auto heigth = HIWORD(lParam);
         window_object->on_size(width, heigth);
         break;
     }
     case WM_CREATE: {
-        auto create_struct = reinterpret_cast<CREATESTRUCT *>(lParam);
-        auto window_object = reinterpret_cast<main_window *>(create_struct->lpCreateParams);
+        const auto create_struct = reinterpret_cast<CREATESTRUCT *>(lParam);
+        const auto window_object = reinterpret_cast<main_window *>(create_struct->lpCreateParams);
         window_object->on_create(hWnd);
         SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window_object));
+        break;
+    }
+    case WM_GETMINMAXINFO: {
+        LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
+        lpMMI->ptMinTrackSize.x = GetSystemMetrics(SM_CXSCREEN) / 3;
+        lpMMI->ptMinTrackSize.y = GetSystemMetrics(SM_CYSCREEN) / 5;
         break;
     }
     case WM_DESTROY:
@@ -78,8 +83,23 @@ bool main_window::setup_main_wndclass()
 
 bool main_window::create_main_window()
 {
-    auto main_wnd = CreateWindow(window_class_name.c_str(), _T("febe_test"), WS_OVERLAPPEDWINDOW, 550, 210, 800, 500,
-                                 NULL, NULL, (HINSTANCE)GetModuleHandle(NULL), this);
+    const int screen_width = GetSystemMetrics(SM_CXSCREEN);
+    const int screen_height = GetSystemMetrics(SM_CYSCREEN);
+
+    RECT window_rect;
+    window_rect.left = 0;
+    window_rect.top = 0;
+    window_rect.right = screen_width / 2;
+    window_rect.bottom = screen_height / 2;
+
+    AdjustWindowRect(&window_rect, WS_OVERLAPPEDWINDOW, NULL);
+    const int window_height = window_rect.bottom - window_rect.top;
+    const int window_width = window_rect.right - window_rect.left;
+
+    const int window_x = (screen_width / 2) - (window_width / 2);
+    const int window_y = (screen_height / 2) - (window_height / 2);
+    auto main_wnd = CreateWindow(window_class_name.c_str(), _T("febe_test"), WS_OVERLAPPEDWINDOW, window_x, window_y,
+                                 window_width, window_height, NULL, NULL, (HINSTANCE)GetModuleHandle(NULL), this);
     if (main_wnd != NULL)
         return 1;
     return 0;
@@ -87,8 +107,19 @@ bool main_window::create_main_window()
 
 bool main_window::create_button()
 {
-    button = CreateWindow(_T("BUTTON"), _T("Output"), WS_BORDER | WS_CHILD | WS_VISIBLE, 430, 175, 70, 20, window,
-                          (HMENU)1, NULL, NULL);
+    RECT client_rect;
+    GetClientRect(window, &client_rect);
+    const int client_height = client_rect.bottom - client_rect.top;
+    const int client_width = client_rect.right - client_rect.left;
+
+    const int button_height = 25;
+    const int button_width = 100;
+
+    const int button_x = (client_width / 2 - button_width / 2);
+    const int button_y = ((client_height / 2 - button_height / 2) + button_height * 2);
+
+    button = CreateWindow(_T("BUTTON"), _T("Output"), WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER, button_x, button_y,
+                          button_width, button_height, window, (HMENU)1, NULL, NULL);
     if (button != NULL)
         return 1;
     return 0;
@@ -96,8 +127,21 @@ bool main_window::create_button()
 
 bool main_window::create_static_text()
 {
-    static_text = CreateWindowEx(WS_EX_TRANSPARENT, _T("STATIC"), _T("Input file path:"), WS_VISIBLE | WS_CHILD, 100,
-                                 130, 100, 18, window, NULL, NULL, NULL);
+    RECT client_rect;
+    GetClientRect(window, &client_rect);
+    const int client_height = client_rect.bottom - client_rect.top;
+    const int client_width = client_rect.right - client_rect.left;
+
+    const int static_text_width = 100;
+    const int static_text_height = static_text_width / 4;
+
+    const int static_text_x = (client_width / 2 - client_width / 4) - static_text_width;
+    const int static_text_y = (client_height / 2) - (20 / 2);
+
+    static_text =
+        CreateWindowEx(WS_EX_TRANSPARENT, _T("STATIC"), _T("Input file path:"), WS_VISIBLE | WS_CHILD, static_text_x,
+                       static_text_y, static_text_width, static_text_height, window, NULL, NULL, NULL);
+
     if (static_text != NULL)
         return 1;
     return 0;
@@ -105,8 +149,19 @@ bool main_window::create_static_text()
 
 bool main_window::create_text_box()
 {
-    text_box = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_VISIBLE, 100, 150, 400, 20, window, NULL,
-                            NULL, NULL);
+    RECT client_rect;
+    GetClientRect(window, &client_rect);
+    const int client_height = client_rect.bottom - client_rect.top;
+    const int client_width = client_rect.right - client_rect.left;
+
+    const int text_box_height = 20;
+    const int text_box_width = client_width / 2;
+
+    const int text_box_x = (client_width / 2) - (text_box_width / 2);
+    const int text_box_y = (client_height / 2) - (text_box_height / 2);
+
+    text_box = CreateWindow(_T("EDIT"), _T(""), WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_LEFT, text_box_x,
+                            text_box_y, text_box_width, text_box_height, window, NULL, NULL, NULL);
     if (text_box != NULL)
         return 1;
     return 0;
@@ -141,9 +196,51 @@ bool main_window::on_create(HWND parent)
     return 0;
 }
 
-bool main_window::on_size(int width, int heigth)
+bool main_window::on_size(const int width, const int heigth)
 {
-    width, heigth;
-    return 0;
+    auto result = move_text_box(width, heigth);
+    result |= move_button(width, heigth);
+    result |= move_static_text(width, heigth);
+    return result;
+}
+
+bool main_window::move_button(const int width, const int heigth)
+{
+    const int button_height = 25;
+    const int button_width = 100;
+
+    const int button_x = (width / 2 - button_width / 2);
+    const int button_y = ((heigth / 2 - button_height / 2) + button_height * 2);
+
+    const auto result = MoveWindow(button, button_x, button_y, button_width, button_height, NULL);
+
+    return result;
+}
+
+bool main_window::move_text_box(const int width, const int heigth)
+{
+    const int text_box_height = 20;
+    const int text_box_width = width / 2;
+
+    const int text_box_x = (width / 2) - (text_box_width / 2);
+    const int text_box_y = (heigth / 2) - (text_box_height / 2);
+
+    const auto result = MoveWindow(text_box, text_box_x, text_box_y, text_box_width, text_box_height, NULL);
+
+    return result;
+}
+
+bool main_window::move_static_text(const int width, const int heigth)
+{
+    const int static_text_width = 100;
+    const int static_text_height = static_text_width / 4;
+
+    const int static_text_x = (width / 2 - width / 4) - static_text_width;
+    const int static_text_y = (heigth / 2) - (20 / 2);
+
+    const auto result =
+        MoveWindow(static_text, static_text_x, static_text_y, static_text_width, static_text_height, NULL);
+
+    return result;
 }
 }
