@@ -15,6 +15,6 @@ class application
     application() = default;
     ~application() = default;
     static std::unique_ptr<application> get_application();
-    std::unique_ptr<main_window> create_main_window();
+    std::unique_ptr<main_window> create_main_window() const;
 };
 }
