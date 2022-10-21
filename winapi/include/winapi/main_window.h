@@ -14,7 +14,10 @@ class main_window
     HWND button_browse = NULL;
     HWND text_box = NULL;
     HWND static_text = NULL;
+    LPWSTR file_name;
+    OPENFILENAME open_file_name;
     WNDCLASS main_wndclass;
+    bool set_open_file_name_params();
     bool setup_main_wndclass();
     bool create_main_window();
     bool create_button_output();
@@ -28,6 +31,7 @@ class main_window
     bool move_static_text(const int width, const int height);
     bool move_button_output(const int width, const int height);
     bool move_button_browse(const int width, const int height);
+    bool open_file_browse();
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 

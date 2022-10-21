@@ -294,6 +294,35 @@ bool main_window::move_static_text(const int width, const int height)
     return result;
 }
 
+bool main_window::set_open_file_name_params()
+{
+    LPCWSTR filters = L".TXT;.JSON";
+    ZeroMemory(&open_file_name, sizeof(OPENFILENAME));
+    open_file_name.lStructSize = sizeof(OPENFILENAME);
+    open_file_name.hInstance = (HINSTANCE)GetStockObject(NULL);
+    open_file_name.hwndOwner = window;
+    open_file_name.lpstrFile = file_name;
+    open_file_name.nMaxFile = sizeof(file_name);
+    open_file_name.lpstrFilter = filters;
+    open_file_name.nFilterIndex = 1;
+    open_file_name.lpstrFileTitle = NULL;
+    open_file_name.nMaxFileTitle = 0;
+    open_file_name.lpstrInitialDir = NULL;
+    open_file_name.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+    return 1;
+}
+
+bool main_window::open_file_browse()
+{
+    set_open_file_name_params();
+    if (GetOpenFileName(&open_file_name))
+    {
+        MessageBox(NULL, file_name, file_name, MB_OK);
+        return 1;
+    }
+    return 0;
+}
+
 bool main_window::on_command(WPARAM wParam)
 {
     switch (LOWORD(wParam))
@@ -306,6 +335,10 @@ bool main_window::on_command(WPARAM wParam)
         {
             MessageBox(window, L"Message", text, MB_OK);
         }
+        break;
+    }
+    case BUTTON_BROWSE: {
+        open_file_browse();
         break;
     }
     }
