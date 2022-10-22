@@ -1,9 +1,4 @@
 #include "winapi/main_window.h"
-#include "readers/data.h"
-#include "readers/factory.h"
-#include "winapi/application.h"
-#include <string>
-#include <vector>
 
 #define BUTTON_OUTPUT 1
 #define BUTTON_BROWSE 2
