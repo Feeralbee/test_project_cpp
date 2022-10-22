@@ -14,7 +14,7 @@ class main_window
     HWND button_browse = NULL;
     HWND text_box = NULL;
     HWND static_text = NULL;
-    LPWSTR file_name;
+    wchar_t file_path[260];
     OPENFILENAME open_file_name;
     WNDCLASS main_wndclass;
     bool set_open_file_name_params();

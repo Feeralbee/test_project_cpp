@@ -227,6 +227,7 @@ bool main_window::on_create(HWND parent)
         result |= create_button_output();
         result |= create_button_browse();
         result |= create_text_box();
+        result |= set_open_file_name_params();
         return result;
     }
     return 0;
@@ -296,13 +297,15 @@ bool main_window::move_static_text(const int width, const int height)
 
 bool main_window::set_open_file_name_params()
 {
-    LPCWSTR filters = L".TXT;.JSON";
+    LPCWSTR filters = L"Text files\"*.txt\"\0*.txt\0"
+                      L"JSON files \"*.json\"\0*.json\0";
     ZeroMemory(&open_file_name, sizeof(OPENFILENAME));
+    ZeroMemory(file_path, sizeof(wchar_t));
     open_file_name.lStructSize = sizeof(OPENFILENAME);
     open_file_name.hInstance = (HINSTANCE)GetStockObject(NULL);
     open_file_name.hwndOwner = window;
-    open_file_name.lpstrFile = file_name;
-    open_file_name.nMaxFile = sizeof(file_name);
+    open_file_name.lpstrFile = file_path;
+    open_file_name.nMaxFile = sizeof(file_path);
     open_file_name.lpstrFilter = filters;
     open_file_name.nFilterIndex = 1;
     open_file_name.lpstrFileTitle = NULL;
@@ -314,11 +317,10 @@ bool main_window::set_open_file_name_params()
 
 bool main_window::open_file_browse()
 {
-    set_open_file_name_params();
     if (GetOpenFileName(&open_file_name))
     {
-        MessageBox(NULL, file_name, file_name, MB_OK);
-        return 1;
+        if (SetWindowText(text_box, file_path))
+            return 1;
     }
     return 0;
 }
@@ -328,12 +330,10 @@ bool main_window::on_command(WPARAM wParam)
     switch (LOWORD(wParam))
     {
     case BUTTON_OUTPUT: {
-        TCHAR text[300];
-        std::memset(text, 0, sizeof text);
-        GetWindowText(text_box, text, GetWindowTextLength(text_box) + 1);
-        if (text != 0)
+        GetWindowText(text_box, file_path, GetWindowTextLength(text_box) + 1);
+        if (file_path != 0)
         {
-            MessageBox(window, L"Message", text, MB_OK);
+            MessageBox(window, L"Message", file_path, MB_OK);
         }
         break;
     }
