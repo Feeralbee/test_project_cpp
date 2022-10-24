@@ -20,6 +20,8 @@ main_window::~main_window()
         DestroyWindow(window);
     if (button_output != NULL)
         DestroyWindow(button_output);
+    if (button_browse != NULL)
+        DestroyWindow(button_browse);
     if (text_box != NULL)
         DestroyWindow(text_box);
     if (static_text != NULL)
