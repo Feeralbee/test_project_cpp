@@ -1,4 +1,8 @@
 #include "winapi/main_window.h"
+#include "readers/data.h"
+#include "readers/factory.h"
+#include <string>
+#include <vector>
 
 #define BUTTON_OUTPUT 1
 #define BUTTON_BROWSE 2
@@ -119,6 +123,21 @@ bool main_window::create_main_window()
     return 0;
 }
 
+bool main_window::on_create(HWND parent)
+{
+    window = parent;
+    if (window != NULL)
+    {
+        auto result = create_static_text();
+        result |= create_button_output();
+        result |= create_button_browse();
+        result |= create_text_box();
+        result |= set_open_file_name_params();
+        return result;
+    }
+    return 0;
+}
+
 bool main_window::create_button_output()
 {
     RECT client_rect;
@@ -216,37 +235,6 @@ bool main_window::create_text_box()
     return 0;
 }
 
-bool main_window::run(int nCmdShow)
-{
-    if (window != NULL)
-    {
-        ShowWindow(window, nCmdShow);
-        UpdateWindow(window);
-        MSG lpMsg;
-        while (GetMessage(&lpMsg, NULL, 0, 0))
-        {
-            TranslateMessage(&lpMsg);
-            DispatchMessage(&lpMsg);
-        }
-    }
-    return GetLastError();
-}
-
-bool main_window::on_create(HWND parent)
-{
-    window = parent;
-    if (window != NULL)
-    {
-        auto result = create_static_text();
-        result |= create_button_output();
-        result |= create_button_browse();
-        result |= create_text_box();
-        result |= set_open_file_name_params();
-        return result;
-    }
-    return 0;
-}
-
 bool main_window::on_size(const int width, const int height)
 {
     auto result = move_text_box(width, height);
@@ -330,6 +318,53 @@ bool main_window::set_open_file_name_params()
     return 1;
 }
 
+bool main_window::on_command(WPARAM wParam)
+{
+    switch (LOWORD(wParam))
+    {
+    case BUTTON_OUTPUT: {
+        on_button_output();
+        break;
+    }
+    case BUTTON_BROWSE: {
+        open_file_browse();
+        break;
+    }
+    }
+    return 0;
+}
+
+bool main_window::on_button_output()
+{
+    GetWindowText(text_box, file_path, GetWindowTextLength(text_box) + 1);
+    if (file_path != 0)
+    {
+        auto reader = readers::factory::create(file_path);
+        if (reader != nullptr)
+        {
+            auto text = reader->get_content_from_file();
+            if (text != nullptr)
+            {
+                std::wstring str;
+                for (auto i = 0; i < text->size(); i++)
+                {
+                    str += text->at(i) + L"\n";
+                }
+                MessageBox(NULL, str.c_str(), file_path, MB_OK);
+            }
+            else
+            {
+                MessageBox(NULL, L"File is not found", L"Error", MB_OK | MB_ICONHAND);
+            }
+        }
+        else
+        {
+            MessageBox(NULL, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
+        }
+    }
+    return 1;
+}
+
 bool main_window::open_file_browse()
 {
     if (GetOpenFileName(&open_file_name))
@@ -340,23 +375,19 @@ bool main_window::open_file_browse()
     return 0;
 }
 
-bool main_window::on_command(WPARAM wParam)
+bool main_window::run(int nCmdShow)
 {
-    switch (LOWORD(wParam))
+    if (window != NULL)
     {
-    case BUTTON_OUTPUT: {
-        GetWindowText(text_box, file_path, GetWindowTextLength(text_box) + 1);
-        if (file_path != 0)
+        ShowWindow(window, nCmdShow);
+        UpdateWindow(window);
+        MSG lpMsg;
+        while (GetMessage(&lpMsg, NULL, 0, 0))
         {
-            MessageBox(window, L"Message", file_path, MB_OK);
+            TranslateMessage(&lpMsg);
+            DispatchMessage(&lpMsg);
         }
-        break;
     }
-    case BUTTON_BROWSE: {
-        open_file_browse();
-        break;
-    }
-    }
-    return 0;
+    return GetLastError();
 }
 }

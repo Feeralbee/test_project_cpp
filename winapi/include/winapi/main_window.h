@@ -27,6 +27,7 @@ class main_window
     bool on_create(HWND parent);
     bool on_command(WPARAM wParam);
     bool on_size(const int width, const int height);
+    bool on_button_output();
     bool move_text_box(const int width, const int height);
     bool move_static_text(const int width, const int height);
     bool move_button_output(const int width, const int height);
