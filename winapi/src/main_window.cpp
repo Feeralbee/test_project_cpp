@@ -201,11 +201,11 @@ bool main_window::on_size(const int width, const int height)
 
 bool main_window::move_button_output(const int width, const int height)
 {
-    const int button_height = 25;
+    const int button_height = 20;
     const int button_width = 100;
 
-    const int button_x = (width / 2 - button_width / 2);
-    const int button_y = ((height / 2 - button_height / 2) + button_height * 2);
+    const int button_x = (width / 2 + width / 4) + button_width;
+    const int button_y = height - button_height * 2;
 
     const auto result = MoveWindow(button_output, button_x, button_y, button_width, button_height, TRUE);
 
@@ -214,11 +214,11 @@ bool main_window::move_button_output(const int width, const int height)
 
 bool main_window::move_button_browse(const int width, const int height)
 {
-    const int button_height = 22;
+    const int button_height = 20;
     const int button_width = 100;
 
     const int button_x = (width / 2 + width / 4) + button_width / 50;
-    const int button_y = (height / 2) - button_height / 2;
+    const int button_y = height - button_height * 2;
 
     const auto result = MoveWindow(button_browse, button_x, button_y, button_width, button_height, TRUE);
 
@@ -231,7 +231,7 @@ bool main_window::move_text_box(const int width, const int height)
     const int text_box_width = width / 2;
 
     const int text_box_x = (width / 2) - (text_box_width / 2);
-    const int text_box_y = (height / 2) - (text_box_height / 2);
+    const int text_box_y = height - text_box_height * 2;
 
     const auto result = MoveWindow(text_box, text_box_x, text_box_y, text_box_width, text_box_height, TRUE);
 
@@ -241,10 +241,10 @@ bool main_window::move_text_box(const int width, const int height)
 bool main_window::move_static_text(const int width, const int height)
 {
     const int static_text_width = 100;
-    const int static_text_height = static_text_width / 4;
+    const int static_text_height = static_text_width / 5;
 
     const int static_text_x = (width / 2 - width / 4) - static_text_width;
-    const int static_text_y = (height / 2) - (20 / 2);
+    const int static_text_y = height - static_text_height * 2;
 
     const auto result =
         MoveWindow(static_text, static_text_x, static_text_y, static_text_width, static_text_height, TRUE);
