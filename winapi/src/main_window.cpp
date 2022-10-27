@@ -132,7 +132,6 @@ bool main_window::on_create(HWND parent)
         result |= create_button_output();
         result |= create_button_browse();
         result |= create_text_box();
-        result |= set_open_file_name_params();
         return result;
     }
     return 0;
@@ -140,23 +139,12 @@ bool main_window::on_create(HWND parent)
 
 bool main_window::create_button_output()
 {
-    RECT client_rect;
-    GetClientRect(window, &client_rect);
-    const int client_height = client_rect.bottom - client_rect.top;
-    const int client_width = client_rect.right - client_rect.left;
-
-    const int button_height = 25;
-    const int button_width = 100;
-
-    const int button_x = (client_width / 2 - button_width / 2);
-    const int button_y = ((client_height / 2 - button_height / 2) + button_height * 2);
-
     const auto class_name = _T("BUTTON");
     const auto text_in_window = _T("Output");
     const auto flags = WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER | BS_PUSHBUTTON;
 
-    button_output = CreateWindow(class_name, text_in_window, flags, button_x, button_y, button_width, button_height,
-                                 window, (HMENU)BUTTON_OUTPUT, NULL, NULL);
+    button_output = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 25, window,
+                                 (HMENU)BUTTON_OUTPUT, NULL, NULL);
     if (button_output != NULL)
         return 1;
     return 0;
@@ -164,23 +152,12 @@ bool main_window::create_button_output()
 
 bool main_window::create_button_browse()
 {
-    RECT client_rect;
-    GetClientRect(window, &client_rect);
-    const int client_height = client_rect.bottom - client_rect.top;
-    const int client_width = client_rect.right - client_rect.left;
-
-    const int button_height = 22;
-    const int button_width = 100;
-
-    const int button_x = (client_width / 2 + client_width / 4) + button_width / 50;
-    const int button_y = (client_height / 2) - button_height / 2;
-
     const auto class_name = _T("BUTTON");
     const auto text_in_window = _T("Browse");
     const auto flags = WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER | BS_PUSHBUTTON;
 
-    button_browse = CreateWindow(class_name, text_in_window, flags, button_x, button_y, button_width, button_height,
-                                 window, (HMENU)BUTTON_BROWSE, NULL, NULL);
+    button_browse = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 22, window,
+                                 (HMENU)BUTTON_BROWSE, NULL, NULL);
     if (button_browse != NULL)
         return 1;
     return 0;
@@ -188,23 +165,12 @@ bool main_window::create_button_browse()
 
 bool main_window::create_static_text()
 {
-    RECT client_rect;
-    GetClientRect(window, &client_rect);
-    const int client_height = client_rect.bottom - client_rect.top;
-    const int client_width = client_rect.right - client_rect.left;
-
-    const int static_text_width = 100;
-    const int static_text_height = static_text_width / 4;
-
-    const int static_text_x = (client_width / 2 - client_width / 4) - static_text_width;
-    const int static_text_y = (client_height / 2) - (20 / 2);
-
     const auto class_name = _T("STATIC");
     const auto text_in_window = _T("Input file path:");
     const auto flags = WS_VISIBLE | WS_CHILD;
 
-    static_text = CreateWindowEx(WS_EX_TRANSPARENT, class_name, text_in_window, flags, static_text_x, static_text_y,
-                                 static_text_width, static_text_height, window, NULL, NULL, NULL);
+    static_text = CreateWindowEx(WS_EX_TRANSPARENT, class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT,
+                                 100, 25, window, NULL, NULL, NULL);
 
     if (static_text != NULL)
         return 1;
@@ -213,23 +179,12 @@ bool main_window::create_static_text()
 
 bool main_window::create_text_box()
 {
-    RECT client_rect;
-    GetClientRect(window, &client_rect);
-    const int client_height = client_rect.bottom - client_rect.top;
-    const int client_width = client_rect.right - client_rect.left;
-
-    const int text_box_height = 20;
-    const int text_box_width = client_width / 2;
-
-    const int text_box_x = (client_width / 2) - (text_box_width / 2);
-    const int text_box_y = (client_height / 2) - (text_box_height / 2);
-
     const auto class_name = _T("EDIT");
     const auto text_in_window = _T("");
     const auto flags = WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_LEFT;
 
-    text_box = CreateWindow(class_name, text_in_window, flags, text_box_x, text_box_y, text_box_width, text_box_height,
-                            window, NULL, NULL, NULL);
+    text_box = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 20, window, NULL,
+                            NULL, NULL);
     if (text_box != NULL)
         return 1;
     return 0;
@@ -297,27 +252,6 @@ bool main_window::move_static_text(const int width, const int height)
     return result;
 }
 
-bool main_window::set_open_file_name_params()
-{
-    const LPCWSTR filters = L"Text files *.txt\0*.txt\0"
-                            L"JSON files *.json\0*.json\0";
-    const auto flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-    ZeroMemory(&open_file_name, sizeof(OPENFILENAME));
-    ZeroMemory(file_path, sizeof(wchar_t));
-    open_file_name.lStructSize = sizeof(OPENFILENAME);
-    open_file_name.hInstance = (HINSTANCE)GetStockObject(NULL);
-    open_file_name.hwndOwner = window;
-    open_file_name.lpstrFile = file_path;
-    open_file_name.nMaxFile = sizeof(file_path);
-    open_file_name.lpstrFilter = filters;
-    open_file_name.nFilterIndex = 1;
-    open_file_name.lpstrFileTitle = NULL;
-    open_file_name.nMaxFileTitle = 0;
-    open_file_name.lpstrInitialDir = NULL;
-    open_file_name.Flags = flags;
-    return 1;
-}
-
 bool main_window::on_command(WPARAM wParam)
 {
     switch (LOWORD(wParam))
@@ -367,6 +301,24 @@ bool main_window::on_button_output()
 
 bool main_window::open_file_browse()
 {
+    OPENFILENAME open_file_name;
+    const LPCWSTR filters = L"Text files *.txt\0*.txt\0"
+                            L"JSON files *.json\0*.json\0";
+    const auto flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+    ZeroMemory(&open_file_name, sizeof(OPENFILENAME));
+    ZeroMemory(file_path, sizeof(wchar_t));
+    open_file_name.lStructSize = sizeof(OPENFILENAME);
+    open_file_name.hInstance = (HINSTANCE)GetStockObject(NULL);
+    open_file_name.hwndOwner = window;
+    open_file_name.lpstrFile = file_path;
+    open_file_name.nMaxFile = sizeof(file_path);
+    open_file_name.lpstrFilter = filters;
+    open_file_name.nFilterIndex = 1;
+    open_file_name.lpstrFileTitle = NULL;
+    open_file_name.nMaxFileTitle = 0;
+    open_file_name.lpstrInitialDir = NULL;
+    open_file_name.Flags = flags;
+
     if (GetOpenFileName(&open_file_name))
     {
         if (SetWindowText(text_box, file_path))

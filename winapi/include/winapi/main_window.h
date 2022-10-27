@@ -15,9 +15,7 @@ class main_window
     HWND text_box = NULL;
     HWND static_text = NULL;
     wchar_t file_path[260];
-    OPENFILENAME open_file_name;
     WNDCLASS main_wndclass;
-    bool set_open_file_name_params();
     bool setup_main_wndclass();
     bool create_main_window();
     bool create_button_output();
