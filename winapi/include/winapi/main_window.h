@@ -7,6 +7,19 @@ namespace winapi
 {
 class main_window
 {
+    enum class file_status
+    {
+        not_found,
+        openned,
+        extension_not_supported
+    };
+
+    enum class button
+    {
+        output,
+        browse
+    };
+
   private:
     const std::wstring window_class_name = _T("main_window");
     HWND window = NULL;
@@ -16,6 +29,7 @@ class main_window
     HWND static_text = NULL;
     wchar_t file_path[260];
     WNDCLASS main_wndclass;
+    file_status file_reading(std::wstring &content);
     bool setup_main_wndclass();
     bool create_main_window();
     bool create_button_output();

@@ -4,9 +4,6 @@
 #include <string>
 #include <vector>
 
-#define BUTTON_OUTPUT 1
-#define BUTTON_BROWSE 2
-
 namespace winapi
 {
 main_window::main_window()
@@ -144,7 +141,7 @@ bool main_window::create_button_output()
     const auto flags = WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER | BS_PUSHBUTTON;
 
     button_output = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 25, window,
-                                 (HMENU)BUTTON_OUTPUT, NULL, NULL);
+                                 (HMENU)button::output, NULL, NULL);
     if (button_output != NULL)
         return 1;
     return 0;
@@ -157,7 +154,7 @@ bool main_window::create_button_browse()
     const auto flags = WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER | BS_PUSHBUTTON;
 
     button_browse = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 22, window,
-                                 (HMENU)BUTTON_BROWSE, NULL, NULL);
+                                 (HMENU)button::browse, NULL, NULL);
     if (button_browse != NULL)
         return 1;
     return 0;
@@ -254,13 +251,13 @@ bool main_window::move_static_text(const int width, const int height)
 
 bool main_window::on_command(WPARAM wParam)
 {
-    switch (LOWORD(wParam))
+    switch (button(wParam))
     {
-    case BUTTON_OUTPUT: {
+    case button::output: {
         on_button_output();
         break;
     }
-    case BUTTON_BROWSE: {
+    case button::browse: {
         open_file_browse();
         break;
     }
@@ -270,33 +267,44 @@ bool main_window::on_command(WPARAM wParam)
 
 bool main_window::on_button_output()
 {
+    std::wstring content;
+
+    auto reading_result = file_reading(content);
+    if (reading_result == file_status::openned)
+        MessageBox(window, content.c_str(), file_path, MB_OK);
+
+    else if (reading_result == file_status::extension_not_supported)
+        MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
+
+    else if (reading_result == file_status::not_found)
+        MessageBox(window, L"File is not found", L"Error", MB_OK | MB_ICONHAND);
+    return 1;
+}
+
+main_window::file_status main_window::file_reading(std::wstring &content)
+{
     GetWindowText(text_box, file_path, GetWindowTextLength(text_box) + 1);
-    if (file_path != 0)
+    auto reader = readers::factory::create(file_path);
+    if (reader != nullptr)
     {
-        auto reader = readers::factory::create(file_path);
-        if (reader != nullptr)
+        auto text = reader->get_content_from_file();
+        if (text != nullptr)
         {
-            auto text = reader->get_content_from_file();
-            if (text != nullptr)
+            for (auto i = 0; i < text->size(); i++)
             {
-                std::wstring str;
-                for (auto i = 0; i < text->size(); i++)
-                {
-                    str += text->at(i) + L"\n";
-                }
-                MessageBox(NULL, str.c_str(), file_path, MB_OK);
+                content += text->at(i) + L"\n";
             }
-            else
-            {
-                MessageBox(NULL, L"File is not found", L"Error", MB_OK | MB_ICONHAND);
-            }
+            return file_status::openned;
         }
         else
         {
-            MessageBox(NULL, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
+            return file_status::not_found;
         }
     }
-    return 1;
+    else
+    {
+        return file_status::extension_not_supported;
+    }
 }
 
 bool main_window::open_file_browse()
