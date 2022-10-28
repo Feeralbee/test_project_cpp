@@ -27,7 +27,7 @@ class main_window
     HWND button_browse = NULL;
     HWND text_box = NULL;
     HWND static_text = NULL;
-    wchar_t file_path[260];
+    std::wstring file_path;
     WNDCLASS main_wndclass;
     file_status file_reading(std::wstring &content);
     bool setup_main_wndclass();

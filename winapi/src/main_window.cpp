@@ -271,7 +271,7 @@ bool main_window::on_button_output()
 
     auto reading_result = file_reading(content);
     if (reading_result == file_status::openned)
-        MessageBox(window, content.c_str(), file_path, MB_OK);
+        MessageBox(window, content.c_str(), file_path.c_str(), MB_OK);
 
     else if (reading_result == file_status::extension_not_supported)
         MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
@@ -283,7 +283,7 @@ bool main_window::on_button_output()
 
 main_window::file_status main_window::file_reading(std::wstring &content)
 {
-    GetWindowText(text_box, file_path, GetWindowTextLength(text_box) + 1);
+    GetWindowText(text_box, (LPWSTR)file_path.c_str(), (int)file_path.capacity());
     auto reader = readers::factory::create(file_path);
     if (reader != nullptr)
     {
@@ -314,12 +314,11 @@ bool main_window::open_file_browse()
                             L"JSON files *.json\0*.json\0";
     const auto flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
     ZeroMemory(&open_file_name, sizeof(OPENFILENAME));
-    ZeroMemory(file_path, sizeof(wchar_t));
     open_file_name.lStructSize = sizeof(OPENFILENAME);
     open_file_name.hInstance = (HINSTANCE)GetStockObject(NULL);
     open_file_name.hwndOwner = window;
-    open_file_name.lpstrFile = file_path;
-    open_file_name.nMaxFile = sizeof(file_path);
+    open_file_name.lpstrFile = (LPWSTR)file_path.c_str();
+    open_file_name.nMaxFile = sizeof(LPWSTR);
     open_file_name.lpstrFilter = filters;
     open_file_name.nFilterIndex = 1;
     open_file_name.lpstrFileTitle = NULL;
@@ -329,7 +328,7 @@ bool main_window::open_file_browse()
 
     if (GetOpenFileName(&open_file_name))
     {
-        if (SetWindowText(text_box, file_path))
+        if (SetWindowText(text_box, file_path.c_str()))
             return 1;
     }
     return 0;
