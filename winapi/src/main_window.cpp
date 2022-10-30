@@ -55,8 +55,8 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
     }
     case WM_GETMINMAXINFO: {
         LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-        lpMMI->ptMinTrackSize.x = GetSystemMetrics(SM_CXSCREEN) / 3;
-        lpMMI->ptMinTrackSize.y = GetSystemMetrics(SM_CYSCREEN) / 5;
+        lpMMI->ptMinTrackSize.x = GetSystemMetrics(SM_CXSCREEN) / 2;
+        lpMMI->ptMinTrackSize.y = GetSystemMetrics(SM_CYSCREEN) / 2;
         break;
     }
     case WM_COMMAND: {
