@@ -29,6 +29,8 @@ main_window::~main_window()
         DestroyWindow(path_box);
     if (static_text != NULL)
         DestroyWindow(static_text);
+    if (static_box != NULL)
+        DestroyWindow(static_box);
 }
 
 LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -131,6 +133,7 @@ bool main_window::on_create(HWND parent)
         result |= create_button_output();
         result |= create_button_browse();
         result |= create_path_box();
+        result |= create_static_box();
         return result;
     }
     return 0;
@@ -176,6 +179,20 @@ bool main_window::create_static_text()
     return 0;
 }
 
+bool main_window::create_static_box()
+{
+    const auto class_name = _T("STATIC");
+    const auto text_in_window = _T("");
+    const auto flags = WS_VISIBLE | WS_CHILD | WS_BORDER;
+
+    static_box = CreateWindowEx(WS_EX_TRANSPARENT, class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100,
+                                25, window, NULL, NULL, NULL);
+
+    if (static_box != NULL)
+        return 1;
+    return 0;
+}
+
 bool main_window::create_path_box()
 {
     const auto class_name = WC_COMBOBOX;
@@ -195,6 +212,7 @@ bool main_window::on_size(const int width, const int height)
     result |= move_button_output(width, height);
     result |= move_button_browse(width, height);
     result |= move_static_text(width, height);
+    result |= move_static_box(width, height);
     return result;
 }
 
@@ -251,6 +269,19 @@ bool main_window::move_static_text(const int width, const int height)
     return result;
 }
 
+bool main_window::move_static_box(const int width, const int height)
+{
+    const int static_box_width = width / 2;
+    const int static_box_height = height - height / 10;
+
+    const int static_box_x = width / 2;
+    const int static_box_y = 0;
+
+    const auto result = MoveWindow(static_box, static_box_x, static_box_y, static_box_width, static_box_height, TRUE);
+
+    return result;
+}
+
 bool main_window::on_command(WPARAM wParam)
 {
     switch (button(wParam))
@@ -276,8 +307,9 @@ bool main_window::on_button_output()
 
     auto reading_result = file_reading(path, content);
     if (reading_result == file_status::openned)
-        MessageBox(window, content.c_str(), path, MB_OK);
-
+    {
+        SetWindowText(static_box, content.c_str());
+    }
     else if (reading_result == file_status::extension_not_supported)
         MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
 
