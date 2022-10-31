@@ -27,9 +27,8 @@ class main_window
     HWND button_browse = NULL;
     HWND text_box = NULL;
     HWND static_text = NULL;
-    std::wstring file_path;
     WNDCLASS main_wndclass;
-    file_status file_reading(std::wstring &content);
+    file_status file_reading(const std::wstring file_path, std::wstring &content);
     bool setup_main_wndclass();
     bool create_main_window();
     bool create_button_output();

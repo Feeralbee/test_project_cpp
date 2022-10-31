@@ -268,10 +268,13 @@ bool main_window::on_command(WPARAM wParam)
 bool main_window::on_button_output()
 {
     std::wstring content;
+    WCHAR path[MAX_PATH];
+    std::memset(path, 0, sizeof(path));
+    GetWindowText(text_box, path, MAX_PATH);
 
-    auto reading_result = file_reading(content);
+    auto reading_result = file_reading(path, content);
     if (reading_result == file_status::openned)
-        MessageBox(window, content.c_str(), file_path.c_str(), MB_OK);
+        MessageBox(window, content.c_str(), path, MB_OK);
 
     else if (reading_result == file_status::extension_not_supported)
         MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
@@ -281,9 +284,8 @@ bool main_window::on_button_output()
     return 1;
 }
 
-main_window::file_status main_window::file_reading(std::wstring &content)
+main_window::file_status main_window::file_reading(const std::wstring file_path, std::wstring &content)
 {
-    GetWindowText(text_box, (LPWSTR)file_path.c_str(), (int)file_path.capacity());
     auto reader = readers::factory::create(file_path);
     if (reader != nullptr)
     {
@@ -309,16 +311,18 @@ main_window::file_status main_window::file_reading(std::wstring &content)
 
 bool main_window::open_file_browse()
 {
+    WCHAR path[MAX_PATH];
     OPENFILENAME open_file_name;
     const LPCWSTR filters = L"Text files *.txt\0*.txt\0"
                             L"JSON files *.json\0*.json\0";
     const auto flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
     ZeroMemory(&open_file_name, sizeof(OPENFILENAME));
+    std::memset(path, 0, sizeof(path));
     open_file_name.lStructSize = sizeof(OPENFILENAME);
     open_file_name.hInstance = (HINSTANCE)GetStockObject(NULL);
     open_file_name.hwndOwner = window;
-    open_file_name.lpstrFile = (LPWSTR)file_path.c_str();
-    open_file_name.nMaxFile = sizeof(LPWSTR);
+    open_file_name.lpstrFile = path;
+    open_file_name.nMaxFile = MAX_PATH;
     open_file_name.lpstrFilter = filters;
     open_file_name.nFilterIndex = 1;
     open_file_name.lpstrFileTitle = NULL;
@@ -328,7 +332,7 @@ bool main_window::open_file_browse()
 
     if (GetOpenFileName(&open_file_name))
     {
-        if (SetWindowText(text_box, file_path.c_str()))
+        if (SetWindowText(text_box, path))
             return 1;
     }
     return 0;
