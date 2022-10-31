@@ -25,7 +25,7 @@ class main_window
     HWND window = NULL;
     HWND button_output = NULL;
     HWND button_browse = NULL;
-    HWND text_box = NULL;
+    HWND path_box = NULL;
     HWND static_text = NULL;
     WNDCLASS main_wndclass;
     file_status file_reading(const std::wstring file_path, std::wstring &content);
@@ -33,13 +33,13 @@ class main_window
     bool create_main_window();
     bool create_button_output();
     bool create_button_browse();
-    bool create_text_box();
+    bool create_path_box();
     bool create_static_text();
     bool on_create(HWND parent);
     bool on_command(WPARAM wParam);
     bool on_size(const int width, const int height);
     bool on_button_output();
-    bool move_text_box(const int width, const int height);
+    bool move_path_box(const int width, const int height);
     bool move_static_text(const int width, const int height);
     bool move_button_output(const int width, const int height);
     bool move_button_browse(const int width, const int height);

@@ -1,6 +1,8 @@
 #include "winapi/main_window.h"
 #include "readers/data.h"
 #include "readers/factory.h"
+
+#include <CommCtrl.h>
 #include <string>
 #include <vector>
 
@@ -23,8 +25,8 @@ main_window::~main_window()
         DestroyWindow(button_output);
     if (button_browse != NULL)
         DestroyWindow(button_browse);
-    if (text_box != NULL)
-        DestroyWindow(text_box);
+    if (path_box != NULL)
+        DestroyWindow(path_box);
     if (static_text != NULL)
         DestroyWindow(static_text);
 }
@@ -128,7 +130,7 @@ bool main_window::on_create(HWND parent)
         auto result = create_static_text();
         result |= create_button_output();
         result |= create_button_browse();
-        result |= create_text_box();
+        result |= create_path_box();
         return result;
     }
     return 0;
@@ -174,22 +176,22 @@ bool main_window::create_static_text()
     return 0;
 }
 
-bool main_window::create_text_box()
+bool main_window::create_path_box()
 {
-    const auto class_name = _T("EDIT");
+    const auto class_name = WC_COMBOBOX;
     const auto text_in_window = _T("");
-    const auto flags = WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_LEFT;
+    const auto flags = WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_LEFT | CBS_DROPDOWN | CBS_HASSTRINGS | WS_OVERLAPPED;
 
-    text_box = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 20, window, NULL,
+    path_box = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 20, window, NULL,
                             NULL, NULL);
-    if (text_box != NULL)
+    if (path_box != NULL)
         return 1;
     return 0;
 }
 
 bool main_window::on_size(const int width, const int height)
 {
-    auto result = move_text_box(width, height);
+    auto result = move_path_box(width, height);
     result |= move_button_output(width, height);
     result |= move_button_browse(width, height);
     result |= move_static_text(width, height);
@@ -222,7 +224,7 @@ bool main_window::move_button_browse(const int width, const int height)
     return result;
 }
 
-bool main_window::move_text_box(const int width, const int height)
+bool main_window::move_path_box(const int width, const int height)
 {
     const int text_box_height = 20;
     const int text_box_width = width / 2;
@@ -230,7 +232,7 @@ bool main_window::move_text_box(const int width, const int height)
     const int text_box_x = (width / 2) - (text_box_width / 2);
     const int text_box_y = height - text_box_height * 2;
 
-    const auto result = MoveWindow(text_box, text_box_x, text_box_y, text_box_width, text_box_height, TRUE);
+    const auto result = MoveWindow(path_box, text_box_x, text_box_y, text_box_width, text_box_height, TRUE);
 
     return result;
 }
@@ -270,7 +272,7 @@ bool main_window::on_button_output()
     std::wstring content;
     WCHAR path[MAX_PATH];
     std::memset(path, 0, sizeof(path));
-    GetWindowText(text_box, path, MAX_PATH);
+    GetWindowText(path_box, path, MAX_PATH);
 
     auto reading_result = file_reading(path, content);
     if (reading_result == file_status::openned)
@@ -332,7 +334,7 @@ bool main_window::open_file_browse()
 
     if (GetOpenFileName(&open_file_name))
     {
-        if (SetWindowText(text_box, path))
+        if (SetWindowText(path_box, path))
             return 1;
     }
     return 0;
