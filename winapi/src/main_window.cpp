@@ -31,6 +31,8 @@ main_window::~main_window()
         DestroyWindow(static_text);
     if (static_box != NULL)
         DestroyWindow(static_box);
+    if (list_box != NULL)
+        DestroyWindow(list_box);
 }
 
 LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -134,6 +136,7 @@ bool main_window::on_create(HWND parent)
         result |= create_button_browse();
         result |= create_path_box();
         result |= create_static_box();
+        result |= create_list_box();
         return result;
     }
     return 0;
@@ -148,6 +151,19 @@ bool main_window::create_button_output()
     button_output = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 25, window,
                                  (HMENU)button::output, NULL, NULL);
     if (button_output != NULL)
+        return 1;
+    return 0;
+}
+
+bool main_window::create_list_box()
+{
+    const auto class_name = _T("LISTBOX");
+    const auto text_in_window = _T("");
+    const auto flags = WS_CHILD | WS_VISIBLE | LBS_MULTIPLESEL;
+
+    list_box = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 400, 400, window, NULL,
+                            NULL, NULL);
+    if (list_box != NULL)
         return 1;
     return 0;
 }
@@ -213,6 +229,7 @@ bool main_window::on_size(const int width, const int height)
     result |= move_button_browse(width, height);
     result |= move_static_text(width, height);
     result |= move_static_box(width, height);
+    result |= move_list_box(width, height);
     return result;
 }
 
@@ -239,6 +256,18 @@ bool main_window::move_button_browse(const int width, const int height)
 
     const auto result = MoveWindow(button_browse, button_x, button_y, button_width, button_height, TRUE);
 
+    return result;
+}
+
+bool main_window::move_list_box(const int width, const int height)
+{
+    const int box_width = width / 3;
+    const int box_height = height / 2;
+
+    const int box_x = width / 10;
+    const int box_y = height / 5;
+
+    const auto result = MoveWindow(list_box, box_x, box_y, box_width, box_height, TRUE);
     return result;
 }
 
@@ -332,15 +361,9 @@ main_window::file_status main_window::file_reading(const std::wstring file_path,
             }
             return file_status::openned;
         }
-        else
-        {
-            return file_status::not_found;
-        }
+        return file_status::not_found;
     }
-    else
-    {
-        return file_status::extension_not_supported;
-    }
+    return file_status::extension_not_supported;
 }
 
 bool main_window::open_file_browse()
