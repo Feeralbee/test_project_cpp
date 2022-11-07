@@ -21,8 +21,6 @@ main_window::~main_window()
 {
     if (window != NULL)
         DestroyWindow(window);
-    if (button_output != NULL)
-        DestroyWindow(button_output);
     if (button_browse != NULL)
         DestroyWindow(button_browse);
     if (path_box != NULL)
@@ -132,26 +130,12 @@ bool main_window::on_create(HWND parent)
     if (window != NULL)
     {
         auto result = create_static_text();
-        result |= create_button_output();
         result |= create_button_browse();
         result |= create_path_box();
         result |= create_static_box();
         result |= create_list_box();
         return result;
     }
-    return 0;
-}
-
-bool main_window::create_button_output()
-{
-    const auto class_name = _T("BUTTON");
-    const auto text_in_window = _T("Output");
-    const auto flags = WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER | BS_PUSHBUTTON;
-
-    button_output = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 25, window,
-                                 (HMENU)button::output, NULL, NULL);
-    if (button_output != NULL)
-        return 1;
     return 0;
 }
 
@@ -225,24 +209,10 @@ bool main_window::create_path_box()
 bool main_window::on_size(const int width, const int height)
 {
     auto result = move_path_box(width, height);
-    result |= move_button_output(width, height);
     result |= move_button_browse(width, height);
     result |= move_static_text(width, height);
     result |= move_static_box(width, height);
     result |= move_list_box(width, height);
-    return result;
-}
-
-bool main_window::move_button_output(const int width, const int height)
-{
-    const int button_height = 20;
-    const int button_width = 100;
-
-    const int button_x = (width / 2 + width / 4) + button_width;
-    const int button_y = height - button_height * 2;
-
-    const auto result = MoveWindow(button_output, button_x, button_y, button_width, button_height, TRUE);
-
     return result;
 }
 
@@ -315,10 +285,6 @@ bool main_window::on_command(WPARAM wParam)
 {
     switch (button(wParam))
     {
-    case button::output: {
-        on_button_output();
-        break;
-    }
     case button::browse: {
         open_file_browse();
         break;
