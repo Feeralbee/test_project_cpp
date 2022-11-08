@@ -196,11 +196,12 @@ bool main_window::create_static_box()
 bool main_window::create_path_box()
 {
     const auto class_name = WC_COMBOBOX;
-    const auto text_in_window = _T("");
-    const auto flags = WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_LEFT | CBS_DROPDOWN | CBS_HASSTRINGS | WS_OVERLAPPED;
+    const auto text_in_window = NULL;
+    const auto flags = CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_TABSTOP | WS_VSCROLL | WS_VISIBLE | WS_CHILD;
 
     path_box = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 20, window, NULL,
                             NULL, NULL);
+
     if (path_box != NULL)
         return 1;
     return 0;
@@ -292,27 +293,16 @@ bool main_window::on_command(WPARAM wParam)
     }
     return 0;
 }
-
+/*
 bool main_window::on_button_output()
 {
-    std::wstring content;
     WCHAR path[MAX_PATH];
     std::memset(path, 0, sizeof(path));
     GetWindowText(path_box, path, MAX_PATH);
 
-    auto reading_result = file_reading(path, content);
-    if (reading_result == file_status::openned)
-    {
-        SetWindowText(static_box, content.c_str());
-    }
-    else if (reading_result == file_status::extension_not_supported)
-        MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
-
-    else if (reading_result == file_status::not_found)
-        MessageBox(window, L"File is not found", L"Error", MB_OK | MB_ICONHAND);
     return 1;
 }
-
+*/
 main_window::file_status main_window::file_reading(const std::wstring file_path, std::wstring &content)
 {
     auto reader = readers::factory::create(file_path);
@@ -355,8 +345,20 @@ bool main_window::open_file_browse()
 
     if (GetOpenFileName(&open_file_name))
     {
-        if (SetWindowText(path_box, path))
-            return 1;
+        std::wstring content;
+        auto reading_result = file_reading(path, content);
+        if (reading_result == file_status::openned)
+        {
+            SendMessage(path_box, CB_ADDSTRING, (WPARAM)0, reinterpret_cast<LPARAM>(path));
+            SetWindowText(static_box, content.c_str());
+        }
+        else if (reading_result == file_status::extension_not_supported)
+            MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
+
+        else if (reading_result == file_status::not_found)
+            MessageBox(window, L"File is not found", L"Error", MB_OK | MB_ICONHAND);
+
+        return 1;
     }
     return 0;
 }
