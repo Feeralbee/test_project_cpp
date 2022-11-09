@@ -199,7 +199,7 @@ bool main_window::create_path_box()
     const auto text_in_window = NULL;
     const auto flags = CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_TABSTOP | WS_VSCROLL | WS_VISIBLE | WS_CHILD;
 
-    path_box = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 20, window, NULL,
+    path_box = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 100, 80, window, NULL,
                             NULL, NULL);
 
     if (path_box != NULL)
@@ -349,7 +349,21 @@ bool main_window::open_file_browse()
         auto reading_result = file_reading(path, content);
         if (reading_result == file_status::openned)
         {
-            SendMessage(path_box, CB_ADDSTRING, (WPARAM)0, reinterpret_cast<LPARAM>(path));
+            auto index = SendMessage(path_box, CB_FINDSTRING, (WPARAM)-1, (LPARAM)path);
+            if (index == CB_ERR)
+            {
+                index = SendMessage(path_box, CB_ADDSTRING, NULL, (LPARAM)content.c_str());
+                SendMessage(path_box, CB_SETITEMDATA, (WPARAM)index, (LPARAM)path);
+            }
+            if (index != CB_ERR && index != CB_ERRSPACE)
+                SendMessage(path_box, CB_SETCURSEL, (WPARAM)index, NULL);
+
+            auto index_list = SendMessage(list_box, LB_FINDSTRING, (WPARAM)-1, (LPARAM)path);
+            if (index_list == LB_ERR)
+                index_list = SendMessage(list_box, LB_ADDSTRING, NULL, reinterpret_cast<LPARAM>(path));
+            if (index_list != LB_ERR && index_list != LB_ERRSPACE)
+                SendMessage(list_box, LB_SETCURSEL, (WPARAM)index_list, NULL);
+
             SetWindowText(static_box, content.c_str());
         }
         else if (reading_result == file_status::extension_not_supported)
