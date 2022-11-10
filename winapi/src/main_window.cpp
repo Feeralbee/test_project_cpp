@@ -66,7 +66,7 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
     case WM_COMMAND: {
         const auto window_object_pointer = GetWindowLongPtr(hWnd, GWLP_USERDATA);
         const auto window_object = reinterpret_cast<main_window *>(window_object_pointer);
-        window_object->on_command(wParam);
+        window_object->on_command(wParam, lParam);
         break;
     }
     case WM_DESTROY:
@@ -282,30 +282,36 @@ bool main_window::move_static_box(const int width, const int height)
     return result;
 }
 
-bool main_window::on_command(WPARAM wParam)
+bool main_window::on_command(WPARAM wParam, LPARAM lParam)
 {
-    if (button(wParam) == button::browse)
+    if ((HWND)lParam == button_browse && (button)wParam == button::browse)
     {
         open_file_browse();
     }
-    else if (HIWORD(wParam) == CBN_SELCHANGE)
+    else if ((HWND)lParam == path_box)
     {
-        auto item_index = SendMessage(path_box, CB_GETCURSEL, NULL, NULL);
-        if (item_index != CB_ERR)
+        if (HIWORD(wParam) == CBN_SELCHANGE)
         {
-            auto index = SendMessage(path_box, CB_GETITEMDATA, (WPARAM)item_index, NULL);
-            SetWindowText(static_box, (LPWSTR)boxes_data.at(index).c_str());
-            SendMessage(list_box, LB_SETCURSEL, (WPARAM)item_index, NULL);
+            auto item_index = SendMessage(path_box, CB_GETCURSEL, NULL, NULL);
+            if (item_index != CB_ERR)
+            {
+                auto index = SendMessage(path_box, CB_GETITEMDATA, (WPARAM)item_index, NULL);
+                SetWindowText(static_box, (LPWSTR)boxes_data.at(index).c_str());
+                SendMessage(list_box, LB_SETCURSEL, (WPARAM)item_index, NULL);
+            }
         }
     }
-    else if (HIWORD(wParam) == LBN_SELCHANGE)
+    else if ((HWND)lParam == list_box)
     {
-        auto item_index = SendMessage(list_box, LB_GETCURSEL, NULL, NULL);
-        if (item_index != LB_ERR)
+        if (HIWORD(wParam) == LBN_SELCHANGE)
         {
-            auto index = SendMessage(list_box, LB_GETITEMDATA, (WPARAM)item_index, NULL);
-            SetWindowText(static_box, (LPWSTR)boxes_data.at(index).c_str());
-            SendMessage(path_box, CB_SETCURSEL, (WPARAM)item_index, NULL);
+            auto item_index = SendMessage(list_box, LB_GETCURSEL, NULL, NULL);
+            if (item_index != LB_ERR)
+            {
+                auto index = SendMessage(list_box, LB_GETITEMDATA, (WPARAM)item_index, NULL);
+                SetWindowText(static_box, (LPWSTR)boxes_data.at(index).c_str());
+                SendMessage(path_box, CB_SETCURSEL, (WPARAM)item_index, NULL);
+            }
         }
     }
     return 0;

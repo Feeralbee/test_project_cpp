@@ -39,7 +39,7 @@ class main_window
     bool create_static_box();
     bool create_list_box();
     bool on_create(HWND parent);
-    bool on_command(WPARAM wParam);
+    bool on_command(WPARAM wParam, LPARAM lParam);
     bool on_size(const int width, const int height);
     bool move_path_box(const int width, const int height);
     bool move_list_box(const int width, const int height);
