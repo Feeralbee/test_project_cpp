@@ -1,8 +1,8 @@
 #pragma once
 #include <Windows.h>
-#include <map>
 #include <string>
 #include <tchar.h>
+#include <vector>
 
 namespace winapi
 {
@@ -29,7 +29,7 @@ class main_window
     HWND static_box = NULL;
     HWND list_box = NULL;
     WNDCLASS main_wndclass;
-    std::map<int, std::wstring> boxes_data;
+    std::vector<std::wstring> boxes_data;
     file_status file_reading(const std::wstring file_path, std::wstring &content);
     bool setup_main_wndclass();
     bool create_main_window();

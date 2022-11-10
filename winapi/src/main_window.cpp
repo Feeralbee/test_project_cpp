@@ -3,7 +3,6 @@
 #include "readers/factory.h"
 
 #include <CommCtrl.h>
-#include <map>
 #include <string>
 #include <vector>
 
@@ -294,8 +293,8 @@ bool main_window::on_command(WPARAM wParam)
         auto item_index = SendMessage(path_box, CB_GETCURSEL, NULL, NULL);
         if (item_index != CB_ERR)
         {
-            auto data = SendMessage(path_box, CB_GETITEMDATA, (WPARAM)item_index, NULL);
-            SetWindowText(static_box, LPWSTR(data));
+            auto index = SendMessage(path_box, CB_GETITEMDATA, (WPARAM)item_index, NULL);
+            SetWindowText(static_box, (LPWSTR)boxes_data.at(index).c_str());
             SendMessage(list_box, LB_SETCURSEL, (WPARAM)item_index, NULL);
         }
     }
@@ -304,8 +303,8 @@ bool main_window::on_command(WPARAM wParam)
         auto item_index = SendMessage(list_box, LB_GETCURSEL, NULL, NULL);
         if (item_index != LB_ERR)
         {
-            auto data = SendMessage(list_box, LB_GETITEMDATA, (WPARAM)item_index, NULL);
-            SetWindowText(static_box, LPWSTR(data));
+            auto index = SendMessage(list_box, LB_GETITEMDATA, (WPARAM)item_index, NULL);
+            SetWindowText(static_box, (LPWSTR)boxes_data.at(index).c_str());
             SendMessage(path_box, CB_SETCURSEL, (WPARAM)item_index, NULL);
         }
     }
@@ -372,9 +371,9 @@ bool main_window::open_file_browse()
             {
                 index = SendMessage(path_box, CB_ADDSTRING, NULL, (LPARAM)path);
                 SendMessage(list_box, LB_INSERTSTRING, (WPARAM)index, (LPARAM)path);
-                boxes_data[(int)index] = content;
-                SendMessage(path_box, CB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data[(int)index].c_str());
-                SendMessage(list_box, LB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data[(int)index].c_str());
+                boxes_data.push_back(content);
+                SendMessage(path_box, CB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data.size() - 1);
+                SendMessage(list_box, LB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data.size() - 1);
             }
             SendMessage(path_box, CB_SETCURSEL, (WPARAM)index, NULL);
             SendMessage(list_box, LB_SETCURSEL, (WPARAM)index, NULL);
