@@ -3,6 +3,7 @@
 #include "readers/factory.h"
 
 #include <CommCtrl.h>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -143,7 +144,7 @@ bool main_window::create_list_box()
 {
     const auto class_name = _T("LISTBOX");
     const auto text_in_window = _T("");
-    const auto flags = WS_CHILD | WS_VISIBLE | LBS_MULTIPLESEL;
+    const auto flags = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | LBS_NOTIFY;
 
     list_box = CreateWindow(class_name, text_in_window, flags, CW_USEDEFAULT, CW_USEDEFAULT, 400, 400, window, NULL,
                             NULL, NULL);
@@ -232,10 +233,10 @@ bool main_window::move_button_browse(const int width, const int height)
 
 bool main_window::move_list_box(const int width, const int height)
 {
-    const int box_width = width / 3;
+    const int box_width = width / 2;
     const int box_height = height / 2;
 
-    const int box_x = width / 10;
+    const int box_x = 0;
     const int box_y = height / 5;
 
     const auto result = MoveWindow(list_box, box_x, box_y, box_width, box_height, TRUE);
@@ -284,12 +285,29 @@ bool main_window::move_static_box(const int width, const int height)
 
 bool main_window::on_command(WPARAM wParam)
 {
-    switch (button(wParam))
+    if (button(wParam) == button::browse)
     {
-    case button::browse: {
         open_file_browse();
-        break;
     }
+    else if (HIWORD(wParam) == CBN_SELCHANGE)
+    {
+        auto item_index = SendMessage(path_box, CB_GETCURSEL, NULL, NULL);
+        if (item_index != CB_ERR)
+        {
+            auto data = SendMessage(path_box, CB_GETITEMDATA, (WPARAM)item_index, NULL);
+            SetWindowText(static_box, LPWSTR(data));
+            SendMessage(list_box, LB_SETCURSEL, (WPARAM)item_index, NULL);
+        }
+    }
+    else if (HIWORD(wParam) == LBN_SELCHANGE)
+    {
+        auto item_index = SendMessage(list_box, LB_GETCURSEL, NULL, NULL);
+        if (item_index != LB_ERR)
+        {
+            auto data = SendMessage(list_box, LB_GETITEMDATA, (WPARAM)item_index, NULL);
+            SetWindowText(static_box, LPWSTR(data));
+            SendMessage(path_box, CB_SETCURSEL, (WPARAM)item_index, NULL);
+        }
     }
     return 0;
 }
@@ -352,18 +370,14 @@ bool main_window::open_file_browse()
             auto index = SendMessage(path_box, CB_FINDSTRING, (WPARAM)-1, (LPARAM)path);
             if (index == CB_ERR)
             {
-                index = SendMessage(path_box, CB_ADDSTRING, NULL, (LPARAM)content.c_str());
-                SendMessage(path_box, CB_SETITEMDATA, (WPARAM)index, (LPARAM)path);
+                index = SendMessage(path_box, CB_ADDSTRING, NULL, (LPARAM)path);
+                SendMessage(list_box, LB_INSERTSTRING, (WPARAM)index, (LPARAM)path);
+                boxes_data[(int)index] = content;
+                SendMessage(path_box, CB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data[(int)index].c_str());
+                SendMessage(list_box, LB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data[(int)index].c_str());
             }
-            if (index != CB_ERR && index != CB_ERRSPACE)
-                SendMessage(path_box, CB_SETCURSEL, (WPARAM)index, NULL);
-
-            auto index_list = SendMessage(list_box, LB_FINDSTRING, (WPARAM)-1, (LPARAM)path);
-            if (index_list == LB_ERR)
-                index_list = SendMessage(list_box, LB_ADDSTRING, NULL, reinterpret_cast<LPARAM>(path));
-            if (index_list != LB_ERR && index_list != LB_ERRSPACE)
-                SendMessage(list_box, LB_SETCURSEL, (WPARAM)index_list, NULL);
-
+            SendMessage(path_box, CB_SETCURSEL, (WPARAM)index, NULL);
+            SendMessage(list_box, LB_SETCURSEL, (WPARAM)index, NULL);
             SetWindowText(static_box, content.c_str());
         }
         else if (reading_result == file_status::extension_not_supported)
