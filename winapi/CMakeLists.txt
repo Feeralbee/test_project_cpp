@@ -3,12 +3,18 @@ add_executable(win_api WIN32
     src/main_window.cpp
     src/application.cpp
     src/control.cpp
+    src/static_control.cpp
+    src/control_box.cpp
+    src/list_box.cpp
     src/button_browse.cpp
 
     include/winapi/main_window.h
     include/winapi/application.h
     include/winapi/control.h
     include/winapi/button_browse.h
+    include/winapi/list_box.h
+    include/winapi/control_box.h
+    include/winapi/static_control.h
 )
 
 target_include_directories(win_api

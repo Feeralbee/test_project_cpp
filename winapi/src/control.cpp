@@ -23,6 +23,11 @@ bool control::destroy()
     return true;
 }
 
+HWND control::get_hwnd() const
+{
+    return _hwnd;
+}
+
 bool control::create(int ex_style, std::wstring class_name, std::wstring text, int style, HWND parent,
                      HINSTANCE hinstance, LPVOID lParam)
 {

@@ -1,15 +1,12 @@
 #pragma once
-
 #include "winapi/control.h"
 
 #include <Windows.h>
-#include <string>
 
 namespace winapi
 {
-class button_browse : public control
+class static_control : public control
 {
   public:
-    bool on_push(std::wstring &directory);
 };
 }

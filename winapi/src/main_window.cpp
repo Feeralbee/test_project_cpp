@@ -347,53 +347,30 @@ main_window::file_status main_window::file_reading(const std::wstring file_path,
 
 bool main_window::open_file_browse()
 {
-    WCHAR path[MAX_PATH];
-    OPENFILENAME open_file_name;
-    const LPCWSTR filters = L"Text files *.txt\0*.txt\0"
-                            L"JSON files *.json\0*.json\0";
-    const auto flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-    ZeroMemory(&open_file_name, sizeof(OPENFILENAME));
-    std::memset(path, 0, sizeof(path));
-    open_file_name.lStructSize = sizeof(OPENFILENAME);
-    open_file_name.hInstance = (HINSTANCE)GetStockObject(NULL);
-    open_file_name.hwndOwner = window;
-    open_file_name.lpstrFile = path;
-    open_file_name.nMaxFile = MAX_PATH;
-    open_file_name.lpstrFilter = filters;
-    open_file_name.nFilterIndex = 1;
-    open_file_name.lpstrFileTitle = NULL;
-    open_file_name.nMaxFileTitle = 0;
-    open_file_name.lpstrInitialDir = NULL;
-    open_file_name.Flags = flags;
-
-    if (GetOpenFileName(&open_file_name))
+    std::wstring content;
+    auto reading_result = file_reading(path, content);
+    if (reading_result == file_status::openned)
     {
-        std::wstring content;
-        auto reading_result = file_reading(path, content);
-        if (reading_result == file_status::openned)
+        auto index = SendMessage(path_box, CB_FINDSTRING, (WPARAM)-1, (LPARAM)path);
+        if (index == CB_ERR)
         {
-            auto index = SendMessage(path_box, CB_FINDSTRING, (WPARAM)-1, (LPARAM)path);
-            if (index == CB_ERR)
-            {
-                index = SendMessage(path_box, CB_ADDSTRING, NULL, (LPARAM)path);
-                SendMessage(list_box, LB_INSERTSTRING, (WPARAM)index, (LPARAM)path);
-                boxes_data.push_back(content);
-                SendMessage(path_box, CB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data.size() - 1);
-                SendMessage(list_box, LB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data.size() - 1);
-            }
-            SendMessage(path_box, CB_SETCURSEL, (WPARAM)index, NULL);
-            SendMessage(list_box, LB_SETCURSEL, (WPARAM)index, NULL);
-            SetWindowText(static_box, content.c_str());
+            index = SendMessage(path_box, CB_ADDSTRING, NULL, (LPARAM)path);
+            SendMessage(list_box, LB_INSERTSTRING, (WPARAM)index, (LPARAM)path);
+            boxes_data.push_back(content);
+            SendMessage(path_box, CB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data.size() - 1);
+            SendMessage(list_box, LB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data.size() - 1);
         }
-        else if (reading_result == file_status::extension_not_supported)
-            MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
-
-        else if (reading_result == file_status::not_found)
-            MessageBox(window, L"File is not found", L"Error", MB_OK | MB_ICONHAND);
-
-        return 1;
+        SendMessage(path_box, CB_SETCURSEL, (WPARAM)index, NULL);
+        SendMessage(list_box, LB_SETCURSEL, (WPARAM)index, NULL);
+        SetWindowText(static_box, content.c_str());
     }
-    return 0;
+    else if (reading_result == file_status::extension_not_supported)
+        MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
+
+    else if (reading_result == file_status::not_found)
+        MessageBox(window, L"File is not found", L"Error", MB_OK | MB_ICONHAND);
+
+    return 1;
 }
 
 bool main_window::run(int nCmdShow)

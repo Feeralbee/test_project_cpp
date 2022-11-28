@@ -4,6 +4,12 @@
 
 namespace winapi
 {
+
+enum class button
+{
+    browse
+};
+
 class control
 {
   protected:
@@ -17,6 +23,7 @@ class control
   public:
     control(int x, int y, int width, int height, HMENU hmenu);
     ~control() = default;
+    HWND get_hwnd() const;
     bool move();
     bool destroy();
     bool create(int ex_style, std::wstring class_name, std::wstring text, int style, HWND parent, HINSTANCE hinstance,

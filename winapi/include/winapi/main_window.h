@@ -15,11 +15,6 @@ class main_window
         extension_not_supported
     };
 
-    enum class button
-    {
-        browse
-    };
-
   private:
     const std::wstring window_class_name = _T("main_window");
     HWND window = NULL;
