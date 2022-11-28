@@ -1,8 +1,14 @@
 #include "winapi/main_window.h"
 #include "readers/data.h"
 #include "readers/factory.h"
+#include "winapi/button_browse.h"
+#include "winapi/control.h"
+#include "winapi/control_box.h"
+#include "winapi/list_box.h"
+#include "winapi/static_control.h"
 
 #include <CommCtrl.h>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -10,27 +16,20 @@ namespace winapi
 {
 main_window::main_window()
 {
-    std::memset(&main_wndclass, 0, sizeof main_wndclass);
-    if (setup_main_wndclass())
-    {
-        create_main_window();
-    }
+    setup_main_wndclass();
+    list_box = std::make_unique<winapi::list_box>()
 }
 
 main_window::~main_window()
 {
     if (window != NULL)
         DestroyWindow(window);
-    if (button_browse != NULL)
-        DestroyWindow(button_browse);
-    if (path_box != NULL)
-        DestroyWindow(path_box);
-    if (static_text != NULL)
-        DestroyWindow(static_text);
-    if (static_box != NULL)
-        DestroyWindow(static_box);
-    if (list_box != NULL)
-        DestroyWindow(list_box);
+
+    button_browse->destroy();
+    list_box->destroy();
+    path_box->destroy();
+    static_box->destroy();
+    static_text->destroy();
 }
 
 LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -81,6 +80,7 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 
 bool main_window::setup_main_wndclass()
 {
+    std::memset(&main_wndclass, 0, sizeof main_wndclass);
     main_wndclass.lpszClassName = window_class_name.c_str();
     main_wndclass.hInstance = (HINSTANCE)GetModuleHandle(NULL);
     main_wndclass.lpfnWndProc = WndProc;
@@ -96,7 +96,7 @@ bool main_window::setup_main_wndclass()
     return 1;
 }
 
-bool main_window::create_main_window()
+bool main_window::create()
 {
     const int screen_width = GetSystemMetrics(SM_CXSCREEN);
     const int screen_height = GetSystemMetrics(SM_CYSCREEN);
@@ -129,12 +129,12 @@ bool main_window::on_create(HWND parent)
     window = parent;
     if (window != NULL)
     {
-        auto result = create_static_text();
-        result |= create_button_browse();
-        result |= create_path_box();
-        result |= create_static_box();
-        result |= create_list_box();
-        return result;
+        list_box->create(NULL, L"LISTBOX", L"", WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | LBS_NOTIFY, window,
+                         NULL, NULL);
+        path_box->create();
+        static_box->create();
+        static_text->create();
+        button_browse->create();
     }
     return 0;
 }

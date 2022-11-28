@@ -1,5 +1,8 @@
 #pragma once
+#include "winapi/control.h"
+
 #include <Windows.h>
+#include <memory>
 #include <string>
 #include <tchar.h>
 #include <vector>
@@ -18,16 +21,15 @@ class main_window
   private:
     const std::wstring window_class_name = _T("main_window");
     HWND window = NULL;
-    HWND button_browse = NULL;
-    HWND path_box = NULL;
-    HWND static_text = NULL;
-    HWND static_box = NULL;
-    HWND list_box = NULL;
+    std::unique_ptr<control> button_browse;
+    std::unique_ptr<control> path_box;
+    std::unique_ptr<control> static_text;
+    std::unique_ptr<control> static_box;
+    std::unique_ptr<control> list_box;
     WNDCLASS main_wndclass;
     std::vector<std::wstring> boxes_data;
     file_status file_reading(const std::wstring file_path, std::wstring &content);
     bool setup_main_wndclass();
-    bool create_main_window();
     bool create_button_browse();
     bool create_path_box();
     bool create_static_text();
@@ -48,6 +50,7 @@ class main_window
   public:
     main_window();
     ~main_window();
+    bool create();
     bool run(int nCmdShow);
 };
 }
