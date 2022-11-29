@@ -3,8 +3,9 @@ add_executable(win_api WIN32
     src/main_window.cpp
     src/application.cpp
     src/control.cpp
-    src/static_control.cpp
-    src/control_box.cpp
+    src/static_text.cpp
+    src/static_box.cpp
+    src/combo_box.cpp
     src/list_box.cpp
     src/button_browse.cpp
 
@@ -13,8 +14,9 @@ add_executable(win_api WIN32
     include/winapi/control.h
     include/winapi/button_browse.h
     include/winapi/list_box.h
-    include/winapi/control_box.h
-    include/winapi/static_control.h
+    include/winapi/combo_box.h
+    include/winapi/static_text.h
+    include/winapi/static_box.h
 )
 
 target_include_directories(win_api

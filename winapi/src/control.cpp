@@ -2,18 +2,12 @@
 
 #include <Windows.h>
 #include <string>
+#include <tuple>
 
 namespace winapi
 {
-control::control(int x, int y, int width, int height, HMENU hmenu)
-    : _x(x), _y(y), _width(width), _height(height), _hmenu(hmenu)
+control::control()
 {
-}
-
-bool control::move()
-{
-    auto result = MoveWindow(_hwnd, _x, _y, _width, _height, TRUE);
-    return result;
 }
 
 bool control::destroy()
@@ -28,10 +22,31 @@ HWND control::get_hwnd() const
     return _hwnd;
 }
 
-bool control::create(int ex_style, std::wstring class_name, std::wstring text, int style, HWND parent,
-                     HINSTANCE hinstance, LPVOID lParam)
+std::tuple<int, int> control::get_parent_size()
 {
-    _hwnd = CreateWindowEx(ex_style, class_name.c_str(), text.c_str(), style, _x, _y, _width, _height, parent, _hmenu,
+    auto parent = GetParent(_hwnd);
+    RECT parent_rect;
+    GetClientRect(parent, &parent_rect);
+
+    const int width = parent_rect.right - parent_rect.left;
+    const int height = parent_rect.bottom - parent_rect.top;
+
+    return std::make_tuple(width, height);
+}
+
+bool control::move()
+{
+    auto [parent_width, parent_height] = get_parent_size();
+    auto [x, y, width, heigth] = this->calculate_position(parent_width, parent_height);
+    auto result = MoveWindow(_hwnd, x, y, width, heigth, TRUE);
+
+    return result;
+}
+
+bool control::create(int ex_style, std::wstring class_name, std::wstring text, int style, int x, int y, int width,
+                     int height, HWND parent, HMENU hmenu, HINSTANCE hinstance, LPVOID lParam)
+{
+    _hwnd = CreateWindowEx(ex_style, class_name.c_str(), text.c_str(), style, x, y, width, height, parent, hmenu,
                            hinstance, lParam);
     if (_hwnd != NULL)
         return true;

@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include <tuple>
 
 namespace winapi
 {
@@ -14,19 +15,16 @@ class control
 {
   protected:
     HWND _hwnd = NULL;
-    int _x;
-    int _y;
-    int _width;
-    int _height;
-    HMENU _hmenu;
+    std::tuple<int, int> get_parent_size();
+    virtual std::tuple<int, int, int, int> calculate_position(int parent_width, int parent_height) = 0;
 
   public:
-    control(int x, int y, int width, int height, HMENU hmenu);
+    control() = default;
     ~control() = default;
     HWND get_hwnd() const;
     bool move();
     bool destroy();
-    bool create(int ex_style, std::wstring class_name, std::wstring text, int style, HWND parent, HINSTANCE hinstance,
-                LPVOID lParam);
+    bool create(int ex_style, std::wstring class_name, std::wstring text, int style, int x, int y, int width,
+                int height, HWND parent, HMENU hmenu, HINSTANCE hinstance, LPVOID lParam);
 };
 }

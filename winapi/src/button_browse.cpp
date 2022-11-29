@@ -1,9 +1,22 @@
 #include "winapi/button_browse.h"
+#include "winapi/control.h"
 
 #include <Windows.h>
+#include <tuple>
 
 namespace winapi
 {
+
+std::tuple<int, int, int, int> button_browse::calculate_position(int parent_width, int parent_height)
+{
+    const int height = 20;
+    const int width = 100;
+
+    const int x = (parent_width / 2 + parent_width / 4) + width / 50;
+    const int y = parent_height - height * 2;
+    return std::make_tuple(x, y, width, height);
+}
+
 bool button_browse::on_push(std::wstring &directory)
 {
     WCHAR path[MAX_PATH];
