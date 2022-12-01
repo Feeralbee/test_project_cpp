@@ -6,10 +6,6 @@
 
 namespace winapi
 {
-control::control()
-{
-}
-
 bool control::destroy()
 {
     if (_hwnd != NULL)

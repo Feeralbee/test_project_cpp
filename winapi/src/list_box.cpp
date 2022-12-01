@@ -37,6 +37,6 @@ LRESULT list_box::get_cursel()
 
 LRESULT list_box::insert_string(WPARAM index, LPARAM string)
 {
-    return SendMessage(_hwnd, LB_INSERTSTRING, NULL, string);
+    return SendMessage(_hwnd, LB_INSERTSTRING, index, string);
 }
 }

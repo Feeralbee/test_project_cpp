@@ -1,5 +1,10 @@
 #pragma once
+#include "winapi/button_browse.h"
+#include "winapi/combo_box.h"
 #include "winapi/control.h"
+#include "winapi/list_box.h"
+#include "winapi/static_box.h"
+#include "winapi/static_text.h"
 
 #include <Windows.h>
 #include <map>
@@ -22,11 +27,11 @@ class main_window
   private:
     const std::wstring window_class_name = _T("main_window");
     HWND window = NULL;
-    std::shared_ptr<control> _button_browse;
-    std::shared_ptr<control> _path_box;
-    std::shared_ptr<control> _static_text;
-    std::shared_ptr<control> _static_box;
-    std::shared_ptr<control> _list_box;
+    std::shared_ptr<button_browse> _button_browse;
+    std::shared_ptr<combo_box> _path_box;
+    std::shared_ptr<static_text> _static_text;
+    std::shared_ptr<static_box> _static_box;
+    std::shared_ptr<list_box> _list_box;
     WNDCLASS main_wndclass;
     std::map<HWND, std::shared_ptr<control>> controls_list;
     std::vector<std::wstring> boxes_data;

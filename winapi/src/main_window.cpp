@@ -154,6 +154,7 @@ bool main_window::on_size()
     _static_box->move();
     _static_text->move();
     _button_browse->move();
+    return 1;
 }
 
 bool main_window::on_command(WPARAM wParam, LPARAM lParam)
@@ -162,29 +163,29 @@ bool main_window::on_command(WPARAM wParam, LPARAM lParam)
     {
         open_file_browse();
     }
-    else if ((HWND)lParam == path_box)
+    else if ((HWND)lParam == _path_box->get_hwnd())
     {
         if (HIWORD(wParam) == CBN_SELCHANGE)
         {
-            auto item_index = SendMessage(path_box, CB_GETCURSEL, NULL, NULL);
+            auto item_index = _path_box->get_cursel();
             if (item_index != CB_ERR)
             {
-                auto index = SendMessage(path_box, CB_GETITEMDATA, (WPARAM)item_index, NULL);
-                SetWindowText(static_box, (LPWSTR)boxes_data.at(index).c_str());
-                SendMessage(list_box, LB_SETCURSEL, (WPARAM)item_index, NULL);
+                auto data = _path_box->get_item_data((WPARAM)item_index);
+                _static_box->set_window_text(boxes_data.at(data));
+                _list_box->set_cursel((WPARAM)item_index);
             }
         }
     }
-    else if ((HWND)lParam == list_box)
+    else if ((HWND)lParam == _list_box->get_hwnd())
     {
         if (HIWORD(wParam) == LBN_SELCHANGE)
         {
-            auto item_index = SendMessage(list_box, LB_GETCURSEL, NULL, NULL);
+            auto item_index = _list_box->get_cursel();
             if (item_index != LB_ERR)
             {
-                auto index = SendMessage(list_box, LB_GETITEMDATA, (WPARAM)item_index, NULL);
-                SetWindowText(static_box, (LPWSTR)boxes_data.at(index).c_str());
-                SendMessage(path_box, CB_SETCURSEL, (WPARAM)item_index, NULL);
+                auto data = _list_box->get_item_data((WPARAM)item_index);
+                _static_box->set_window_text(boxes_data.at(data));
+                _path_box->set_cursel((WPARAM)item_index);
             }
         }
     }
@@ -213,21 +214,23 @@ main_window::file_status main_window::file_reading(const std::wstring file_path,
 bool main_window::open_file_browse()
 {
     std::wstring content;
+    std::wstring path;
+    _button_browse->on_push(path);
     auto reading_result = file_reading(path, content);
     if (reading_result == file_status::openned)
     {
-        auto index = SendMessage(path_box, CB_FINDSTRING, (WPARAM)-1, (LPARAM)path);
+        auto index = _path_box->find_string((LPARAM)path.c_str());
         if (index == CB_ERR)
         {
-            index = SendMessage(path_box, CB_ADDSTRING, NULL, (LPARAM)path);
-            SendMessage(list_box, LB_INSERTSTRING, (WPARAM)index, (LPARAM)path);
+            index = _path_box->add_string((LPARAM)path.c_str());
+            _list_box->insert_string((WPARAM)index, (LPARAM)path.c_str());
             boxes_data.push_back(content);
-            SendMessage(path_box, CB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data.size() - 1);
-            SendMessage(list_box, LB_SETITEMDATA, (WPARAM)index, (LPARAM)boxes_data.size() - 1);
+            _path_box->set_item_data((WPARAM)index, (LPARAM)boxes_data.size() - 1);
+            _list_box->set_item_data((WPARAM)index, (LPARAM)boxes_data.size() - 1);
         }
-        SendMessage(path_box, CB_SETCURSEL, (WPARAM)index, NULL);
-        SendMessage(list_box, LB_SETCURSEL, (WPARAM)index, NULL);
-        SetWindowText(static_box, content.c_str());
+        _path_box->set_cursel((WPARAM)index);
+        _list_box->set_cursel((WPARAM)index);
+        _static_box->set_window_text(content);
     }
     else if (reading_result == file_status::extension_not_supported)
         MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
