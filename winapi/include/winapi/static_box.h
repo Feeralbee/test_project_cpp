@@ -7,5 +7,8 @@ class static_box : public control
 {
   private:
     virtual std::tuple<int, int, int, int> calculate_position(int parent_width, int parent_height);
+
+  public:
+    bool set_window_text(std::wstring text);
 };
 }

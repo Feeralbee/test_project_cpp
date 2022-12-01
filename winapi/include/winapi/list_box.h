@@ -15,6 +15,6 @@ class list_box : public control
     LRESULT get_item_data(WPARAM index);
     LRESULT set_cursel(WPARAM index);
     LRESULT get_cursel();
-    LRESULT insert_string(LPARAM string);
+    LRESULT insert_string(WPARAM index, LPARAM string);
 };
 }
