@@ -15,4 +15,28 @@ std::tuple<int, int, int, int> list_box::calculate_position(int parent_width, in
     return std::make_tuple(x, y, width, height);
 }
 
+LRESULT list_box::set_item_data(WPARAM value, LPARAM index)
+{
+    return SendMessage(_hwnd, LB_SETITEMDATA, value, index);
+}
+
+LRESULT list_box::get_item_data(WPARAM index)
+{
+    return SendMessage(_hwnd, LB_GETITEMDATA, index, NULL);
+}
+
+LRESULT list_box::set_cursel(WPARAM index)
+{
+    return SendMessage(_hwnd, LB_SETCURSEL, index, NULL);
+}
+
+LRESULT list_box::get_cursel()
+{
+    return SendMessage(_hwnd, LB_GETCURSEL, NULL, NULL);
+}
+
+LRESULT list_box::insert_string(LPARAM string)
+{
+    return SendMessage(_hwnd, LB_INSERTSTRING, NULL, string);
+}
 }
