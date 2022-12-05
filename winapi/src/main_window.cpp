@@ -136,11 +136,11 @@ bool main_window::on_create(HWND parent)
                           CW_USEDEFAULT, CW_USEDEFAULT, 400, 400, window, NULL, NULL, NULL);
         _button_browse->create(NULL, L"BUTTON", L"Browse", WS_CHILD | WS_VISIBLE | BS_FLAT | BS_VCENTER | BS_PUSHBUTTON,
                                CW_USEDEFAULT, CW_USEDEFAULT, 100, 22, window, (HMENU)button::browse, NULL, NULL);
-        _static_box->create(NULL, L"STATIC", NULL, WS_VISIBLE | WS_CHILD | WS_BORDER, CW_USEDEFAULT, CW_USEDEFAULT, 100,
+        _static_box->create(NULL, L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, CW_USEDEFAULT, CW_USEDEFAULT, 100,
                             25, window, NULL, NULL, NULL);
         _static_text->create(NULL, L"STATIC", L"Input file path:", WS_VISIBLE | WS_CHILD, CW_USEDEFAULT, CW_USEDEFAULT,
                              100, 25, window, NULL, NULL, NULL);
-        _path_box->create(NULL, L"COMBOBOX", NULL,
+        _path_box->create(NULL, L"COMBOBOX", L"",
                           CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_TABSTOP | WS_VSCROLL | WS_VISIBLE | WS_CHILD,
                           CW_USEDEFAULT, CW_USEDEFAULT, 100, 80, window, NULL, NULL, NULL);
     }
