@@ -5,6 +5,7 @@
 #include "winapi/combo_box.h"
 #include "winapi/control.h"
 #include "winapi/list_box.h"
+#include "winapi/messages.h"
 #include "winapi/static_box.h"
 #include "winapi/static_text.h"
 
@@ -75,10 +76,45 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
         DeleteObject((HBRUSH)GetClassLongPtr(hWnd, GCLP_HBRBACKGROUND));
         PostQuitMessage(0);
         break;
+    case messages::FILE_PATH_WAS_INIT: {
+        const auto window_object_pointer = GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        const auto window_object = reinterpret_cast<main_window *>(window_object_pointer);
+        window_object->on_file_path_was_init(wParam);
+        break;
+    }
     default:
         return (DefWindowProc(hWnd, message, wParam, lParam));
     }
     return 0;
+}
+
+bool main_window::on_file_path_was_init(WPARAM wparam)
+{
+    std::wstring content;
+    std::wstring path = (LPWSTR)wparam;
+    auto reading_result = file_reading(path, content);
+    if (reading_result == file_status::openned)
+    {
+        auto index = _path_box->find_string((LPARAM)path.c_str());
+        if (index == CB_ERR)
+        {
+            index = _path_box->add_string((LPARAM)path.c_str());
+            _list_box->insert_string((WPARAM)index, (LPARAM)path.c_str());
+            boxes_data.push_back(content);
+            _path_box->set_item_data((WPARAM)index, (LPARAM)boxes_data.size() - 1);
+            _list_box->set_item_data((WPARAM)index, (LPARAM)boxes_data.size() - 1);
+        }
+        _path_box->set_cursel((WPARAM)index);
+        _list_box->set_cursel((WPARAM)index);
+        _static_box->set_window_text(content);
+    }
+    else if (reading_result == file_status::extension_not_supported)
+        MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
+
+    else if (reading_result == file_status::not_found)
+        MessageBox(window, L"File is not found", L"Error", MB_OK | MB_ICONHAND);
+
+    return 1;
 }
 
 bool main_window::setup_main_wndclass()
@@ -159,6 +195,7 @@ bool main_window::on_size()
 
 bool main_window::on_command(WPARAM wParam, LPARAM lParam)
 {
+    /*
     if ((HWND)lParam == _button_browse->get_hwnd() && (button)wParam == button::browse)
     {
         open_file_browse();
@@ -188,7 +225,7 @@ bool main_window::on_command(WPARAM wParam, LPARAM lParam)
                 _path_box->set_cursel((WPARAM)item_index);
             }
         }
-    }
+    }*/
     return 0;
 }
 
@@ -213,32 +250,6 @@ main_window::file_status main_window::file_reading(const std::wstring file_path,
 
 bool main_window::open_file_browse()
 {
-    std::wstring content;
-    std::wstring path;
-    _button_browse->on_push(path);
-    auto reading_result = file_reading(path, content);
-    if (reading_result == file_status::openned)
-    {
-        auto index = _path_box->find_string((LPARAM)path.c_str());
-        if (index == CB_ERR)
-        {
-            index = _path_box->add_string((LPARAM)path.c_str());
-            _list_box->insert_string((WPARAM)index, (LPARAM)path.c_str());
-            boxes_data.push_back(content);
-            _path_box->set_item_data((WPARAM)index, (LPARAM)boxes_data.size() - 1);
-            _list_box->set_item_data((WPARAM)index, (LPARAM)boxes_data.size() - 1);
-        }
-        _path_box->set_cursel((WPARAM)index);
-        _list_box->set_cursel((WPARAM)index);
-        _static_box->set_window_text(content);
-    }
-    else if (reading_result == file_status::extension_not_supported)
-        MessageBox(window, L"File extension is not supported", L"Error", MB_OK | MB_ICONHAND);
-
-    else if (reading_result == file_status::not_found)
-        MessageBox(window, L"File is not found", L"Error", MB_OK | MB_ICONHAND);
-
-    return 1;
 }
 
 bool main_window::run(int nCmdShow)

@@ -39,4 +39,13 @@ LRESULT list_box::insert_string(WPARAM index, LPARAM string)
 {
     return SendMessage(_hwnd, LB_INSERTSTRING, index, string);
 }
+
+bool list_box::on_command(WPARAM wparam)
+{
+    if (wparam == LBN_SELCHANGE)
+    {
+        return 1;
+    }
+    return 0;
+}
 }

@@ -26,5 +26,7 @@ class control
     bool destroy();
     bool create(int ex_style, std::wstring class_name, std::wstring text, int style, int x, int y, int width,
                 int height, HWND parent, HMENU hmenu, HINSTANCE hinstance, LPVOID lParam);
+    virtual bool on_command(WPARAM wparam) = 0;
+    bool set_window_text(std::wstring text);
 };
 }

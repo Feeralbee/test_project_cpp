@@ -44,4 +44,13 @@ LRESULT combo_box::add_string(LPARAM string)
 {
     return SendMessage(_hwnd, CB_ADDSTRING, NULL, string);
 }
+
+bool combo_box::on_command(WPARAM wparam)
+{
+    if (wparam == CBN_SELCHANGE)
+    {
+        return 1;
+    }
+    return 0;
+}
 }

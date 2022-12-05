@@ -48,4 +48,8 @@ bool control::create(int ex_style, std::wstring class_name, std::wstring text, i
         return true;
     return false;
 }
+bool control::set_window_text(std::wstring text)
+{
+    return SetWindowText(_hwnd, text.c_str());
+}
 }

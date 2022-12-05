@@ -11,8 +11,9 @@ class button_browse : public control
 {
   private:
     virtual std::tuple<int, int, int, int> calculate_position(int parent_width, int parent_height);
+    bool on_push(std::wstring &directory);
 
   public:
-    bool on_push(std::wstring &directory);
+    virtual bool on_command(WPARAM wparam);
 };
 }

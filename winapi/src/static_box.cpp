@@ -13,8 +13,4 @@ std::tuple<int, int, int, int> static_box::calculate_position(int parent_width, 
 
     return std::make_tuple(x, y, width, height);
 }
-bool static_box::set_window_text(std::wstring text)
-{
-    return SetWindowText(_hwnd, text.c_str());
-}
 }

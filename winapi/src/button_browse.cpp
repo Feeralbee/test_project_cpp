@@ -1,5 +1,6 @@
 #include "winapi/button_browse.h"
 #include "winapi/control.h"
+#include "winapi/messages.h"
 
 #include <Windows.h>
 #include <tuple>
@@ -42,6 +43,20 @@ bool button_browse::on_push(std::wstring &directory)
     {
         directory = path;
         return 1;
+    }
+    return 0;
+}
+
+bool button_browse::on_command(WPARAM wparam)
+{
+    if ((button)wparam == button::browse)
+    {
+        std::wstring file_path;
+        if (on_push(file_path))
+        {
+            SendMessage(GetParent(_hwnd), messages::FILE_PATH_WAS_INIT, (WPARAM)file_path.c_str(), NULL);
+            return 1;
+        }
     }
     return 0;
 }

@@ -17,6 +17,7 @@ add_executable(win_api WIN32
     include/winapi/combo_box.h
     include/winapi/static_text.h
     include/winapi/static_box.h
+    include/winapi/messages.h
 )
 
 target_include_directories(win_api
