@@ -9,6 +9,10 @@ class static_box : public control
     virtual std::tuple<int, int, int, int> calculate_position(int parent_width, int parent_height);
 
   public:
-    virtual bool on_command(WPARAM wparam) = 0;
+    virtual bool on_command(WPARAM wparam)
+    {
+        wparam;
+        return 1;
+    };
 };
 }

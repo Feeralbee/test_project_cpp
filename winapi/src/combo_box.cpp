@@ -1,5 +1,6 @@
 #include "winapi/combo_box.h"
 #include "winapi/control.h"
+#include "winapi/messages.h"
 
 #include <tuple>
 
@@ -49,6 +50,13 @@ bool combo_box::on_command(WPARAM wparam)
 {
     if (wparam == CBN_SELCHANGE)
     {
+        auto item_index = get_cursel();
+        if (item_index != CB_ERR)
+        {
+            auto data = get_item_data((WPARAM)item_index);
+            SendMessage(_hwnd, messages::COMBO_BOX_CURSEL_CHANGED, (WPARAM)item_index, (LPARAM)data);
+        }
+
         return 1;
     }
     return 0;

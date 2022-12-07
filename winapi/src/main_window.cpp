@@ -20,22 +20,25 @@ main_window::main_window()
 {
     setup_main_wndclass();
     _list_box = std::make_shared<list_box>();
+    controls_list[_list_box->get_hwnd()] = _list_box;
     _button_browse = std::make_shared<button_browse>();
+    controls_list[_button_browse->get_hwnd()] = _button_browse;
     _path_box = std::make_shared<combo_box>();
+    controls_list[_path_box->get_hwnd()] = _path_box;
     _static_box = std::make_shared<static_box>();
+    controls_list[_static_box->get_hwnd()] = _static_box;
     _static_text = std::make_shared<static_text>();
+    controls_list[_static_text->get_hwnd()] = _static_text;
 }
 
 main_window::~main_window()
 {
     if (window != NULL)
         DestroyWindow(window);
-
-    _button_browse->destroy();
-    _list_box->destroy();
-    _path_box->destroy();
-    _static_box->destroy();
-    _static_text->destroy();
+    for (auto &[hwnd, ctrl] : controls_list)
+    {
+        ctrl->destroy();
+    }
 }
 
 LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -82,6 +85,18 @@ LRESULT CALLBACK main_window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
         window_object->on_file_path_was_init(wParam);
         break;
     }
+    case messages::COMBO_BOX_CURSEL_CHANGED: {
+        const auto window_object_pointer = GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        const auto window_object = reinterpret_cast<main_window *>(window_object_pointer);
+        window_object->on_combo_box_changed(wParam, lParam);
+        break;
+    }
+    case messages::LIST_BOX_CURSEL_CHANGED: {
+        const auto window_object_pointer = GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        const auto window_object = reinterpret_cast<main_window *>(window_object_pointer);
+        window_object->on_list_box_changed(wParam, lParam);
+        break;
+    }
     default:
         return (DefWindowProc(hWnd, message, wParam, lParam));
     }
@@ -114,6 +129,20 @@ bool main_window::on_file_path_was_init(WPARAM wparam)
     else if (reading_result == file_status::not_found)
         MessageBox(window, L"File is not found", L"Error", MB_OK | MB_ICONHAND);
 
+    return 1;
+}
+
+bool main_window::on_combo_box_changed(WPARAM wparam, LPARAM lparam)
+{
+    _static_box->set_window_text(boxes_data.at(lparam));
+    _list_box->set_cursel(wparam);
+    return 1;
+}
+
+bool main_window::on_list_box_changed(WPARAM wparam, LPARAM lparam)
+{
+    _static_box->set_window_text(boxes_data.at(lparam));
+    _path_box->set_cursel(wparam);
     return 1;
 }
 
@@ -185,47 +214,16 @@ bool main_window::on_create(HWND parent)
 
 bool main_window::on_size()
 {
-    _list_box->move();
-    _path_box->move();
-    _static_box->move();
-    _static_text->move();
-    _button_browse->move();
+    for (auto &[hwnd, ctrl] : controls_list)
+    {
+        ctrl->move();
+    }
     return 1;
 }
 
 bool main_window::on_command(WPARAM wParam, LPARAM lParam)
 {
-    /*
-    if ((HWND)lParam == _button_browse->get_hwnd() && (button)wParam == button::browse)
-    {
-        open_file_browse();
-    }
-    else if ((HWND)lParam == _path_box->get_hwnd())
-    {
-        if (HIWORD(wParam) == CBN_SELCHANGE)
-        {
-            auto item_index = _path_box->get_cursel();
-            if (item_index != CB_ERR)
-            {
-                auto data = _path_box->get_item_data((WPARAM)item_index);
-                _static_box->set_window_text(boxes_data.at(data));
-                _list_box->set_cursel((WPARAM)item_index);
-            }
-        }
-    }
-    else if ((HWND)lParam == _list_box->get_hwnd())
-    {
-        if (HIWORD(wParam) == LBN_SELCHANGE)
-        {
-            auto item_index = _list_box->get_cursel();
-            if (item_index != LB_ERR)
-            {
-                auto data = _list_box->get_item_data((WPARAM)item_index);
-                _static_box->set_window_text(boxes_data.at(data));
-                _path_box->set_cursel((WPARAM)item_index);
-            }
-        }
-    }*/
+    controls_list[(HWND)lParam]->on_command(wParam);
     return 0;
 }
 
@@ -246,10 +244,6 @@ main_window::file_status main_window::file_reading(const std::wstring file_path,
         return file_status::not_found;
     }
     return file_status::extension_not_supported;
-}
-
-bool main_window::open_file_browse()
-{
 }
 
 bool main_window::run(int nCmdShow)

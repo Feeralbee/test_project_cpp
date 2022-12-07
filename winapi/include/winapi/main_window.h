@@ -40,8 +40,9 @@ class main_window
     bool on_create(HWND parent);
     bool on_command(WPARAM wParam, LPARAM lParam);
     bool on_file_path_was_init(WPARAM wparam);
+    bool on_combo_box_changed(WPARAM wparam, LPARAM lparam);
+    bool on_list_box_changed(WPARAM wparam, LPARAM lparam);
     bool on_size();
-    bool open_file_browse();
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
