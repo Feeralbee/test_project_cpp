@@ -27,3 +27,25 @@ endif()
 if(MSVC_IDE)
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 endif()
+
+
+macro(add_flags var)
+    set(_add_flags_flags ${ARGN})
+    list(JOIN _add_flags_flags " " _add_flags_flags)
+    string(APPEND ${var} " ${_add_flags_flags}")
+endmacro()
+
+macro(add_clang_flags var)
+    set(_add_clang_flags_flags ${ARGN})
+    list(TRANSFORM _add_clang_flags_flags PREPEND -clang:)
+    add_flags(${var} ${_add_clang_flags_flags})
+endmacro()
+
+
+add_clang_flags(CMAKE_CXX_FLAGS
+    -Werror
+    -Wall
+    -Wextra
+    -Wsuggest-destructor-override
+    -Wsuggest-override
+)

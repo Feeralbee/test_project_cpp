@@ -4,7 +4,9 @@ project(febe)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CONAN_DISABLE_CHECK_COMPILER)
+set(CONAN_DISABLE_CHECK_COMPILER ON)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 enable_testing()
                                                                             

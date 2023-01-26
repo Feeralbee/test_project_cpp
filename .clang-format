@@ -1,4 +1,8 @@
+---
 Language:        Cpp
 BasedOnStyle:  Microsoft
 # Section 4.1.2 Named Namespaces
 FixNamespaceComments: false
+---
+Language: Json
+IndentWidth: 2
